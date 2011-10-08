@@ -42,7 +42,7 @@ class Useradmin_Provider_Facebook extends Provider {
 	 */
 	public function verify()
 	{
-		if ($this->facebook->getSession())
+		if ($this->facebook->getUser())
 		{
 			try
 			{
