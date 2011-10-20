@@ -42,21 +42,17 @@ class Useradmin_Provider_Facebook extends Provider {
 	 */
 	public function verify()
 	{
-		if ($this->facebook->getSession())
+		try
 		{
-			try
-			{
-				$this->uid = $this->facebook->getUser();
-				// read user info as array from Graph API
-				$this->me = $this->facebook->api('/me');
-			}
-			catch (FacebookApiException $e)
-			{
-				return false;
-			}
-			return true;
+			$this->uid = $this->facebook->getUser();
+			// read user info as array from Graph API
+			$this->me = $this->facebook->api('/me');
 		}
-		return false;
+		catch (FacebookApiException $e)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	/**
