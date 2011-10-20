@@ -75,6 +75,8 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 */
 	public function action_edit($id = NULL)
 	{
+		$id = $this->request->param('id', $id);
+		
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('Edit user');
 		// load the content from view
@@ -215,6 +217,8 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 */
 	public function action_delete($id = NULL)
 	{
+		$id = $this->request->param('id', $id);
+		
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('Delete user');
 		$user = ORM::factory('user', $id);
