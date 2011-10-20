@@ -752,6 +752,13 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 				catch (ORM_Validation_Exception $e)
 				{
+					/*
+					 * Redirect back to the front page in case they
+					 * try to create another account with a separate provider
+					 */
+					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
+					$this->request->redirect('user/login');
+					
 					if ($provider_name == 'twitter')
 					{
 						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
