@@ -10,7 +10,7 @@ abstract class Useradmin_Provider {
 	public static function factory($provider_name)
 	{
 		$provider = null;
-		$providers = Kohana::$config->load('useradmin.providers');
+		$providers = Kohana::config('useradmin.providers');
 		if (! empty($provider_name) && isset($providers[$provider_name]) && $providers[$provider_name])
 		{
 			switch ($provider_name)
