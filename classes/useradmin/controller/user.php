@@ -41,16 +41,41 @@ class Useradmin_Controller_User extends Controller_App {
 	); // the others are public (forgot, login, register, reset, noaccess)
 	// logout is also public to avoid confusion (e.g. easier to specify and test post-logout page)
 
-    public function before(){
-        $baseUrl = Url::base(true);
-        if(substr($this->request->referrer(),0,strlen($baseUrl)) == $baseUrl){
-            $urlPath = ltrim(parse_url($this->request->referrer(),PHP_URL_PATH),'/');
-            $processedRef = Request::process_uri($urlPath);
+    public function before() 
+	{
+		$fullBaseUrl = Url::base(true);
+
+		//was user on our site?
+        if( strpos($this->request->referrer(), $fullBaseUrl) === 0 )
+		{
+			//now check that a controller set, it wasn't the user controller, and that the session var "noReturn" is not false
+			
+            $uri = parse_url($this->request->referrer(), PHP_URL_PATH);
+			
+			// correct the path for url_base and index_file, in part taken from Kohana_Request::detect_uri()
+			// Get the path from the base URL, including the index file
+			$base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
+			
+			if (strpos($uri, $base_url) === 0)
+			{
+				// Remove the base URL from the URI
+				$uri = (string) substr($uri, strlen($base_url));
+			}
+
+			if (Kohana::$index_file AND strpos($uri, Kohana::$index_file) === 0)
+			{
+				// Remove the index file from the URI
+				$uri = (string) substr($uri, strlen(Kohana::$index_file));
+			}
+
+            $processedRef = Request::process_uri($uri);
+			
             $referrerController = Arr::path(
                 $processedRef,
                 'params.controller',
                 false
             );
+
             if($referrerController && $referrerController != 'user' && !Session::instance()->get('noReturn',false)){
                 Session::instance()->set('returnUrl',$this->request->referrer());
             }
@@ -320,13 +345,16 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			// set the template title (see Controller_App for implementation)
 			$this->template->title = __('Login');
+			
 			// If user already signed-in
 			if (Auth::instance()->logged_in() != 0)
 			{
 				// redirect to the user account
 				$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 			}
+			
 			$view = View::factory('user/login');
+			
 			// If there is a post and $_POST is not empty
 			if ($_REQUEST && isset($_REQUEST['username'], $_REQUEST['password']))
 			{
@@ -352,11 +380,13 @@ class Useradmin_Controller_User extends Controller_App {
 					$view->set('errors', $validation->errors('login'));
 				}
 			}
+			
 			// allow setting the username as a get param
 			if (isset($_GET['username']))
 			{
 				$view->set('username', htmlspecialchars($_GET['username']));
 			}
+			
 			$providers = Kohana::$config->load('useradmin.providers');
 			$view->set('facebook_enabled', 
 			isset($providers['facebook']) ? $providers['facebook'] : false);
