@@ -14,6 +14,28 @@ Earlier writing about Kohana auth:
 * [Kohana 3 auth: the auth module functionality](http://blog.mixu.net/2010/09/07/kohana-3-auth-the-auth-module-functionality/)
 * [Step-by-step guide to getting started with Kohana 3 auth](http://blog.mixu.net/2010/09/06/step-by-step-guide-to-kohana-3-auth/)
 
+INSTALLATION NOTES
+==================
+
+Enable this module before the Kohana auth module or it will not work!
+
+	Kohana::modules(array(
+		'useradmin'  => MODPATH.'useradmin',  // Mixu's useradmin module
+	 	'auth'       => MODPATH.'auth',       // Basic authentication
+		...
+	));
+	
+	
+For the pagination module I had success with the 3.2/devel branch of Shadowhands github repo here: <https://github.com/shadowhand/pagination/tree/3.2/develop>, the default 3.1/master branch didn't work.
+If you are using submodules the following can be used (and don't forget adding it to Kohana modules afterwards) to checkout the needed branch:
+
+	git submodule add git://github.com/shadowhand/pagination.git modules/pagination
+	cd modules/pagination
+	git checkout -b 3.2/develop origin/3.2/develop
+	cd ../..
+	git submodule init && git submodule update
+
+
 SUPPORTED PROVIDERS
 ===================
 
