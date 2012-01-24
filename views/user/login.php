@@ -53,16 +53,16 @@ if(!empty($options)) {
    echo '<li style="padding-bottom: 8px;"><label>'.__('To register / log in using another account, please click your provider').':</label></li>';
    echo '<li>';
    if(isset($options['facebook']) && $options['facebook']) {
-      echo '<a class="login_provider" style="background: #FFF url(/img/facebook.png) no-repeat center center" href="'.URL::site('/user/provider/facebook').'"></a>';
+      echo '<a class="login_provider" style="background: #FFF url('.URL::site('/img/facebook.png').') no-repeat center center" href="'.URL::site('/user/provider/facebook').'"></a>';
    }
    if(isset($options['twitter']) && $options['twitter']) {
-      echo '<a class="login_provider" style="background: #FFF url(/img/twitter.png) no-repeat center center" href="'.URL::site('/user/provider/twitter').'"></a>';
+      echo '<a class="login_provider" style="background: #FFF url('.URL::site('/img/twitter.png').') no-repeat center center" href="'.URL::site('/user/provider/twitter').'"></a>';
    }
    if(isset($options['google']) && $options['google']) {
-      echo '<a class="login_provider" style="background: #FFF url(/img/google.gif) no-repeat center center" href="'.URL::site('/user/provider/google').'"></a>';
+      echo '<a class="login_provider" style="background: #FFF url('.URL::site('/img/google.gif').') no-repeat center center" href="'.URL::site('/user/provider/google').'"></a>';
    }
    if(isset($options['yahoo']) && $options['yahoo']) {
-      echo '<a class="login_provider" style="background: #FFF url(/img/yahoo.gif) no-repeat center center" href="'.URL::site('/user/provider/yahoo').'"></a>';
+      echo '<a class="login_provider" style="background: #FFF url('.URL::site('/img/yahoo.gif').') no-repeat center center" href="'.URL::site('/user/provider/yahoo').'"></a>';
    }
    echo '<br style="clear: both;">
    </li>';
