@@ -72,7 +72,7 @@ INSERT INTO `roles_users` (`user_id`, `role_id`) VALUES
 -- Table structure for table `user_identity`
 --
 
-DROP TABLE IF EXISTS `user_identity`;
+DROP TABLE IF EXISTS `user_identities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_identity` (
