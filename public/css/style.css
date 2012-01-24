@@ -553,30 +553,30 @@ a.associated_account {
 }
 
 a.facebook {
-   background: #FFF url(/img/small/facebook_gray.png) no-repeat center center;
+   background: #FFF url(../img/small/facebook_gray.png) no-repeat center center;
 }
 
 a.facebook:hover {
-   background: #FFF url(/img/small/facebook.png) no-repeat center center;
+   background: #FFF url(../img/small/facebook.png) no-repeat center center;
 }
 
 a.twitter {
-   background: #FFF url(/img/small/twitter_gray.png) no-repeat center center;   
+   background: #FFF url(../img/small/twitter_gray.png) no-repeat center center;   
 }
 a.twitter:hover {
-   background: #FFF url(/img/small/twitter.png) no-repeat center center;
+   background: #FFF url(../img/small/twitter.png) no-repeat center center;
 }
 a.google {
-background: #FFF url(/img/small/google_gray.png) no-repeat center center
+background: #FFF url(../img/small/google_gray.png) no-repeat center center
 }
 a.google:hover {
-background: #FFF url(/img/small/google.png) no-repeat center center
+background: #FFF url(../img/small/google.png) no-repeat center center
 }
 a.yahoo {
-background: #FFF url(/img/small/yahoo_gray.png) no-repeat center center;
+background: #FFF url(../img/small/yahoo_gray.png) no-repeat center center;
 }
 a.yahoo:hover {
-background: #FFF url(/img/small/yahoo.png) no-repeat center center;
+background: #FFF url(../img/small/yahoo.png) no-repeat center center;
 }
 
 
