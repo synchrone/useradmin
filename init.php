@@ -14,6 +14,16 @@ Route::set('user/provider_return', 'user/provider_return(/<provider>)', array('p
 		'provider'       => NULL,
 	));
 
+Route::set('admin_user', 'admin_user(/<action>(/<id>))',
+	array(
+		'action' => '(edit|delete)',
+	))
+	->defaults(array(
+		'controller' => 'admin_user',
+		'action'     => 'index',
+		'id'   => NULL,
+	));
+
 // Static file serving (CSS, JS, images)
 Route::set('css', '<dir>(/<file>)', array('file' => '.+', 'dir' => '(css|img)'))
    ->defaults(array(
