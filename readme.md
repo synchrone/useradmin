@@ -17,14 +17,16 @@ Earlier writing about Kohana auth:
 INSTALLATION NOTES
 ==================
 
-Enable this module before the Kohana auth module or it will not work!
+**Enable this module before the Kohana Auth and ORM modules or it will not work.**
+The useradmin module must shadow the classes Auth_ORM and Model_User as well as have
+make the useradmin config available to the Auth class.
 
 	Kohana::modules(array(
 		'useradmin'  => MODPATH.'useradmin',  // Mixu's useradmin module
 	 	'auth'       => MODPATH.'auth',       // Basic authentication
+	 	'orm'        => MODPATH.'orm',       // Basic authentication
 		...
 	));
-	
 	
 For the pagination module I had success with the 3.2/devel branch of Shadowhands github repo here: <https://github.com/shadowhand/pagination/tree/3.2/develop>, the default 3.1/master branch didn't work.
 If you are using submodules the following can be used (and don't forget adding it to Kohana modules afterwards) to checkout the needed branch:
