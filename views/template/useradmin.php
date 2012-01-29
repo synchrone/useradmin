@@ -17,12 +17,12 @@
              $session = Session::instance();
 
              if (Auth::instance()->logged_in()){
-                echo '<li>'.Html::anchor('admin_user', 'User admin').'</li>';
-                echo '<li>'.Html::anchor('user/profile', 'My profile').'</li>';
-                echo '<li>'.Html::anchor('user/logout', 'Log out').'</li>';
+                echo '<li>'.Html::anchor('admin_user', __('user.admin')).'</li>';
+                echo '<li>'.Html::anchor('user/profile', __('my.profile')).'</li>';
+                echo '<li>'.Html::anchor('user/logout', __('logout')).'</li>';
              } else {
-                echo '<li>'.Html::anchor('user/register', 'Register').'</li>';
-                echo '<li>'.Html::anchor('user/login', 'Log in').'</li>';
+                echo '<li>'.Html::anchor('user/register', __('register')).'</li>';
+                echo '<li>'.Html::anchor('user/login', __('login')).'</li>';
              }
            ?>
          </ul>

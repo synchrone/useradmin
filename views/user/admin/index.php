@@ -8,11 +8,11 @@
 <div class="block">
 <div class="submenu">
    <ul>
-      <li><?php echo Html::anchor('admin_user/edit', __('Add new user'))?></li>
+      <li><?php echo Html::anchor('admin_user/edit', __('?add.user'))?></li>
    </ul>
    <br style="clear:both;">
 </div>
-<h1><?php echo __('Administer users'); ?></h1>
+<h1><?php echo __('administer.users'); ?></h1>
 <div class="content">
 <?php
 echo $paging->render();
@@ -28,7 +28,7 @@ foreach ($users as $user) {
    $row['last_login'] = Helper_Format::relative_time($row['last_login']);
 //   $row['last_failed_login'] = Helper_Format::relative_time(strtotime($row['last_failed_login']));
    // add actions
-   $row['actions'] = Html::anchor('admin_user/edit/'.$row['id'], __('Edit')).' | '.Html::anchor('admin_user/delete/'.$row['id'], __('Delete'));
+   $row['actions'] = Html::anchor('admin_user/edit/'.$row['id'], __('edit')).' | '.Html::anchor('admin_user/delete/'.$row['id'], __('delete'));
    // set roles
    $row['role'] = '';
    foreach($user->roles->where('name', '!=', 'login')->find_all() as $role) {
@@ -49,15 +49,15 @@ foreach ($users as $user) {
    $data[] = $row;
 }
 
-$column_list = array( 'username' => array( 'label' => __('Username') ),
-                       'role' => array( 'label' => __('Role(s)'), 'sortable' => false ),
-                       'last_login' => array( 'label' => __('Last login') ),
-                       'logins' => array( 'label' => __('# of logins') ),
+$column_list = array( 'username' => array( 'label' => __('username') ),
+                       'role' => array( 'label' => __('roles'), 'sortable' => false ),
+                       'last_login' => array( 'label' => __('last.login') ),
+                       'logins' => array( 'label' => __('nbr.of.logins') ),
                      );
 if(!empty($providers)) {
-   $column_list['identities'] = array( 'label' => __('Identities'), 'sortable' => false );
+   $column_list['identities'] = array( 'label' => __('identities'), 'sortable' => false );
 }
-$column_list['actions'] = array( 'label' => __('Actions'), 'sortable' => false );
+$column_list['actions'] = array( 'label' => __('actions'), 'sortable' => false );
 $datatable = new Helper_Datatable($column_list, array('paginator' => true, 'class' => 'table', 'sortable' => 'true', 'default_sort' => 'username'));
 $datatable->values($data);
 echo $datatable->render();

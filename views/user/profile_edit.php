@@ -10,20 +10,15 @@ if(isset($data)) {
 echo $form->open('user/profile_edit');
 ?>
 <div class="block">
-   <h1><?php echo __('Edit profile'); ?></h1>
+   <h1><?php echo __('edit.profile'); ?></h1>
    <div class="content">
    <ul>
-      <li><label><?php echo __('Username'); ?></label></li>
-      <?php echo $form->input('username', null, array('info' => __('Length between 4-32 characters. Letters, numbers, dot and underscore are allowed characters.'))); ?>
-      <li><label><?php echo __('Email address'); ?></label></li>
-      <?php echo $form->input('email') ?>
-      <li><label><?php echo __('Password'); ?></label></li>
-      <?php echo $form->password('password', null, array('info' => __('Password should be between 6-42 characters.'))) ?>
-      <li><label><?php echo __('Re-type Password'); ?></label></li>
-      <?php echo $form->password('password_confirm') ?>
-      <li><h2><?php echo __('Roles'); ?></h2></li>
+   
+      <?php echo View::factory('user/user_edit_form')->set(array('form' => $form)); ?>
+    
+      <li><h2><?php echo __('roles'); ?></h2></li>
       <li><table class="content">
-         <tr class="heading"><td><?php echo __('Role'); ?></td><td><?php echo __('Description'); ?></td></tr>
+         <tr class="heading"><td><?php echo __('role'); ?></td><td><?php echo __('description'); ?></td></tr>
      <?php
          $i = 0;
          foreach($user_roles as $role => $description) {
@@ -42,7 +37,7 @@ echo $form->open('user/profile_edit');
    </ul>
    <br>
 <?php
-echo $form->submit(NULL, __('Save'));
+echo $form->submit(NULL, __('save'));
 echo $form->close();
 ?>
    </div>

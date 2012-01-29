@@ -109,7 +109,7 @@ class Useradmin_Controller_User extends Controller_App {
 	public function action_noaccess()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Access not allowed');
+		$this->template->title = __('access.denied');
 		$view = $this->template->content = View::factory('user/noaccess');
 	}
 
@@ -119,7 +119,7 @@ class Useradmin_Controller_User extends Controller_App {
 	public function action_profile()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('User profile');
+		$this->template->title = __('user.profile');
 		if (Auth::instance()->logged_in() == false)
 		{
 			// No user is currently logged in
@@ -136,7 +136,7 @@ class Useradmin_Controller_User extends Controller_App {
 	public function action_profile_edit()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Edit user profile');
+		$this->template->title = __('edit.profile');
 		$user = Auth::instance()->get_user();
 		$id = $user->id;
 		// load the content from view
@@ -158,7 +158,7 @@ class Useradmin_Controller_User extends Controller_App {
 					'email'
 				));
 				// message: save success
-				Message::add('success', __('Values saved.'));
+				Message::add('success', __('values.saved').'.');
 				// redirect and exit
 				$this->request->redirect('user/profile');
 				return;
@@ -167,7 +167,7 @@ class Useradmin_Controller_User extends Controller_App {
 			{
 				// Get errors for display in view
 				// Note how the first param is the path to the message file (e.g. /messages/register.php)
-				Message::add('error', __('Error: Values could not be saved.'));
+				Message::add('error', __('error.values.could.not.be.saved'));
 				$errors = $e->errors('register');
 				$errors = array_merge($errors, ( isset($errors['_external']) ? $errors['_external'] : array() ));
 				$view->set('errors', $errors);
@@ -205,7 +205,7 @@ class Useradmin_Controller_User extends Controller_App {
 			$recaptcha_error = null;
 		}
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('User registration');
+		$this->template->title = __('user.registration');
 		// If user already signed-in
 		if (Auth::instance()->logged_in() != false)
 		{
@@ -232,7 +232,7 @@ class Useradmin_Controller_User extends Controller_App {
 				{
 					$optional_checks = false;
 					$recaptcha_error = $recaptcha_resp->error;
-					Message::add('error', __('The captcha text is incorrect, please try again.'));
+					Message::add('error', __('captcha.incorrect').'. '.__('please.try.again').'.');
 				}
 			}
 			try
@@ -274,7 +274,7 @@ class Useradmin_Controller_User extends Controller_App {
 	public function action_unregister()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Close user account');
+		$this->template->title = __('close.user.account');
 		if (Auth::instance()->logged_in() == false)
 		{
 			// No user is currently logged in
@@ -303,7 +303,7 @@ class Useradmin_Controller_User extends Controller_App {
 			DB::delete('user_identity')->where('user_id', '=', $id)
 			                           ->execute();
 			// message: save success
-			Message::add('success', __('User deleted.'));
+			Message::add('success', __('user.deleted').'.');
 			$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 		}
 		// display confirmation
@@ -344,7 +344,7 @@ class Useradmin_Controller_User extends Controller_App {
 		else
 		{
 			// set the template title (see Controller_App for implementation)
-			$this->template->title = __('Login');
+			$this->template->title = __('login');
 			
 			// If user already signed-in
 			if (Auth::instance()->logged_in() != 0)
@@ -413,11 +413,11 @@ class Useradmin_Controller_User extends Controller_App {
 		// Password reset must be enabled in config/useradmin.php
 		if (! Kohana::$config->load('useradmin')->email)
 		{
-			Message::add('error', 'Password reset via email is not enabled. Please contact the site administrator to reset your password.');
+			Message::add('error', 'email.password.reset.not.enabled');
 			$this->request->redirect('user/register');
 		}
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Forgot password');
+		$this->template->title = __('forgot.password');
 		if (isset($_POST['reset_email']))
 		{
 			$user = ORM::factory('user')->where('email', '=', $_POST['reset_email'])->find();
@@ -427,43 +427,41 @@ class Useradmin_Controller_User extends Controller_App {
 				// send an email with the account reset token
 				$user->reset_token = $user->generate_password(32);
 				$user->save();
-				$message = "You have requested a password reset. You can reset password to your account by visiting the page at:\n\n" .
-				           ":reset_token_link\n\n" .
-				           "If the above link is not clickable, please visit the following page:\n" .
-				           ":reset_link\n\n" .
-				           "and copy/paste the following Reset Token: :reset_token\nYour user account name is: :username\n";
+                
 				$mailer = Email::connect();
+                
 				// Create complex Swift_Message object stored in $message
 				// MUST PASS ALL PARAMS AS REFS
-				$subject = __('Account password reset');
+				$subject = __('account.password.reset');
 				$to = $_POST['reset_email'];
 				$from = Kohana::$config->load('useradmin')->email_address;
-				$body = __($message, array(
+				$body = __("email.password.reset.message.body", array(
 					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE), 
 					':reset_link' => URL::site('user/reset', TRUE), 
 					':reset_token' => $user->reset_token, 
 					':username' => $user->username
 				));
+                
 				// FIXME: Test if Swift_Message has been found.
 				$message_swift = Swift_Message::newInstance($subject, $body)->setFrom($from)->setTo($to);
 				if ($mailer->send($message_swift))
 				{
-					Message::add('success', __('Password reset email sent.'));
+					Message::add('success', __('password.reset.email.sent').'.');
 					$this->request->redirect('user/login');
 				}
 				else
 				{
-					Message::add('failure', __('Could not send email.'));
+					Message::add('failure', __('could.not.send.email').'.');
 				}
 			}
 			else 
 				if ($user->username == 'admin')
 				{
-					Message::add('error', __('Admin account password cannot be reset via email.'));
+					Message::add('error', __('no.admin.account.email.password.reset'));
 				}
 				else
 				{
-					Message::add('error', __('User account could not be found.'));
+					Message::add('error', __('user.account.not.found'));
 				}
 		}
 		$this->template->content = View::factory('user/reset/forgot');
@@ -477,11 +475,11 @@ class Useradmin_Controller_User extends Controller_App {
 		// Password reset must be enabled in config/useradmin.php
 		if (! Kohana::$config->load('useradmin')->email)
 		{
-			Message::add('error', 'Password reset via email is not enabled. Please contact the site administrator to reset your password.');
+			Message::add('error', __('email.password.reset.not.enabled'));
 			$this->request->redirect('user/register');
 		}
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Reset password');
+		$this->template->title = __('reset.password');
 		if (isset($_REQUEST['reset_token']) && isset($_REQUEST['reset_email']))
 		{
 			// make sure that the reset_token has exactly 32 characters (not doing that would allow resets with token length 0)
@@ -494,7 +492,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// The admin password cannot be reset by email
 				if ($user->has('roles',ORM::factory('role',array('name'=>'admin'))))
 				{
-					Message::add('failure', __('The admin password cannot be reset by email.'));
+					Message::add('failure', __('no.admin.account.email.password.reset'));
 				}
 				else 
 					if (is_numeric($user->id) && ( $user->reset_token == $_REQUEST['reset_token'] ))
@@ -504,11 +502,11 @@ class Useradmin_Controller_User extends Controller_App {
 						// This field does not exist in the default config:
 						//               $user->failed_login_count = 0;
 						$user->save();
-						//Message::add('success', __('Password reset.'));
+						//Message::add('success', __('password.reset'));
 						Message::add('success', '<p>' 
-						                      . __('Your password has been reset to: ":password".', array(':password' => $password)) 
+						                      . __('your.new.password', array(':password' => $password)) 
 						                      . '</p><p>' 
-						                      . __('Please log in below.') 
+						                      . __('please.log.in.below') 
 						                      . '</p>'
 						);
 						$this->request->redirect('user/login?username=' . $user->username);
@@ -524,7 +522,7 @@ class Useradmin_Controller_User extends Controller_App {
 	function action_change_password()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Change password');
+		$this->template->title = __('change.password');
 		$user = Auth::instance()->get_user();
 		$id = $user->id;
 		// load the content from view
@@ -542,7 +540,7 @@ class Useradmin_Controller_User extends Controller_App {
 			if ($validate)
 			{
 				// message: save success
-				Message::add('success', __('Values saved.'));
+				Message::add('success', __('values.saved'));
 				// redirect and exit
 				$this->request->redirect('user/index'); //index will redir ya whereever you need
 				return;
@@ -551,7 +549,7 @@ class Useradmin_Controller_User extends Controller_App {
 			{
 				// UNFORTUNATELY, it is NOT possible to get errors for display in view
 				// since they will never be returned by change_password()
-				Message::add('error', __('Password could not be changed, please make sure that the passwords match.'));
+				Message::add('error', __('unable.to.change.password.?passwords.match'));
 				// Pass on the old form values
 				$_POST['password'] = $_POST['password_confirm'] = '';
 				$view->set('defaults', $_POST);
@@ -573,7 +571,7 @@ class Useradmin_Controller_User extends Controller_App {
 	{
 		if (Auth::instance()->logged_in())
 		{
-			Message::add('success', 'Already logged in.');
+			Message::add('success', __('already.logged.in'));
 			// redirect to the user account
 			$this->request->redirect('user/profile');
 		}
@@ -589,7 +587,7 @@ class Useradmin_Controller_User extends Controller_App {
 			$provider->redirect_url('/user/provider_return/' . $provider_name));
 			return;
 		}
-		Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
+		Message::add('error', __('provider.not.enabled.select.different.or.login'));
 		$this->request->redirect('user/login');
 		return;
 	}
@@ -613,7 +611,7 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 				else
 				{
-					Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
+					Message::add('error', __('provider.not.enabled.select.different.or.login'));
 					$this->request->redirect('user/login');
 					return;
 				}
@@ -621,14 +619,14 @@ class Useradmin_Controller_User extends Controller_App {
 			else 
 				if (isset($_POST['confirmation']))
 				{
-					Message::add('error', 'Please click Yes to confirm associating the account.');
+					Message::add('error', __('click.yes.to.associate.account'));
 					$this->request->redirect('user/profile');
 					return;
 				}
 		}
 		else
 		{
-			Message::add('error', 'You are not logged in.');
+			Message::add('error', 'not.logged.in');
 			$this->request->redirect('user/login');
 			return;
 		}
@@ -674,7 +672,7 @@ class Useradmin_Controller_User extends Controller_App {
 						$user_identity->identity = $provider->user_id();
 						if ($user_identity->check())
 						{
-							Message::add('success', __('Your user account has been associated with this provider.'));
+							Message::add('success', __('user.account.associated.with.provider'));
 							$user_identity->save();
 							// redirect to the user account
 							$this->request->redirect('user/profile');
@@ -682,7 +680,7 @@ class Useradmin_Controller_User extends Controller_App {
 						}
 						else
 						{
-							Message::add('error', 'We were unable to associate this account with the provider. Please make sure that there are no other accounts using this provider identity, as each 3rd party provider identity can only be associated with one user account.');
+							Message::add('error', __('unable.to.associate.account.with.provider'));
 							$this->request->redirect('user/login');
 							return;
 						}
@@ -690,7 +688,7 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 			}
 		}
-		Message::add('error', 'There was an error associating your account with this provider.');
+		Message::add('error', __('error.associating.account.with.provider'));
 		$this->request->redirect('user/login');
 		return;
 	}
@@ -703,7 +701,7 @@ class Useradmin_Controller_User extends Controller_App {
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
-			Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
+			Message::add('error', __('provider.not.enabled.select.different.or.login'));
 			$this->request->redirect('user/login');
 			return;
 		}
@@ -776,11 +774,11 @@ class Useradmin_Controller_User extends Controller_App {
 				{
 					if ($provider_name == 'twitter')
 					{
-						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
+						Message::add('error', __('twitter.no.email.retrive.support'));
 					}
 					else
 					{
-						Message::add('error', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
+						Message::add('error', 'please.complete.data.from.other.account');
 					}
 					// in case the data for some reason fails, the user will still see something sensible:
 					// the normal registration form.
@@ -806,13 +804,13 @@ class Useradmin_Controller_User extends Controller_App {
 			}
 			else
 			{
-				Message::add('error', 'You are logged in, but the email received from the provider does not match the email associated with your account.');
+				Message::add('error', __('logged.in.but.account.emails.do.not.match'));
 				$this->request->redirect('user/profile');
 			}
 		}
 		else
 		{
-			Message::add('error', 'Retrieving information from the provider failed. Please register below.');
+			Message::add('error', __('retrieving.info.from.provider.failed.register.below'));
 			$this->request->redirect('user/register');
 		}
 	}
