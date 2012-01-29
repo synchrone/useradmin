@@ -324,7 +324,8 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			$this->auto_render = false;
 			$this->request->headers('Content-Type', 'application/json');
-			if (Auth::instance()->logged_in() != 0)
+
+			if ( Auth::instance()->logged_in() != 0 )
 			{
 				$this->response->status(200);
 				$this->template->content = $this->request->body('{ "success": "true" }');
@@ -339,6 +340,7 @@ class Useradmin_Controller_User extends Controller_App {
 					return;
 				}
             }
+
 			$this->response->status(500);
 			$this->template->content = $this->request->body('{ "success": "false" }');
 			return;

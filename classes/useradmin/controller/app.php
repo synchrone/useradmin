@@ -92,29 +92,31 @@ class Useradmin_Controller_App extends Controller {
 		{
 			session_destroy();
 		}
+
 		// Execute parent::before first
 		parent::before();
+
 		// Open session
 		$this->session = Session::instance();
 
         //if we're not logged in, but auth type is orm. gives us chance to auto login
-        $supports_auto_login = new ReflectionClass(get_class(Auth::instance()));
-        $supports_auto_login = $supports_auto_login->hasMethod('auto_login');
-        if(!Auth::instance()->logged_in() && $supports_auto_login){
+        $auth_class_inspector = new ReflectionClass(get_class(Auth::instance()));
+
+        if(!Auth::instance()->logged_in() && $auth_class_inspector->hasMethod('auto_login'))
+        {
             Auth::instance()->auto_login();
         }
 
 		// Check user auth and role
-		$action_name = Request::current()->action();
-		if 
-		(
+		$action_name = Request::$current->action();
+		if (
 			// auth is required AND user role given in auth_required is NOT logged in
 			( $this->auth_required !== FALSE && Auth::instance()->logged_in($this->auth_required) === FALSE ) ||
 			// OR secure_actions is set AND the user role given in secure_actions is NOT logged in
 			( is_array($this->secure_actions) && array_key_exists($action_name, $this->secure_actions) && Auth::instance()->logged_in($this->secure_actions[$action_name]) === FALSE )
 		)
 		{
-			if (Auth::instance()->logged_in())
+			if ( Auth::instance()->logged_in() )
 			{
 				// user is logged in but not on the secure_actions list
 				$this->access_required();
@@ -124,7 +126,8 @@ class Useradmin_Controller_App extends Controller {
 				$this->login_required();
 			}
 		}
-		if ($this->auto_render)
+
+		if ( $this->auto_render )
 		{
 			// only load the template if the template has not been set..
 			$this->template = View::factory($this->template);
@@ -166,10 +169,11 @@ class Useradmin_Controller_App extends Controller {
 			
 			// Display profile if its enabled and request by query profile
 			$this->template->profile = (isset($_REQUEST['profile']) && Kohana::$profiling)?"<div id=\"kohana-profiler\">".View::factory('profiler/stats')."</div>":"";
-			
+
 			// Assign the template as the request response and render it
 			$this->response->body($this->template);
 		}
 		parent::after();
+
 	}
 }
