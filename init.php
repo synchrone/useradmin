@@ -25,7 +25,7 @@ Route::set('admin_user', 'admin_user(/<action>(/<id>))',
 	));
 
 // Static file serving (CSS, JS, images)
-Route::set('css', '<dir>(/<file>)', array('file' => '.+', 'dir' => '(css|img)'))
+Route::set('assets', 'useradmin_assets/<dir>(/<file>)', array('file' => '.+', 'dir' => '(css|img|js)'))
    ->defaults(array(
 		'controller' => 'user',
 		'action'     => 'media',

@@ -156,9 +156,11 @@ class Useradmin_Controller_App extends Controller {
 		if ($this->auto_render === TRUE)
 		{
 			$styles = array(
-				'css/style.css' => 'screen'
+				'useradmin_assets/css/style.css' => 'screen'
 			);
+
 			$scripts = array();
+
 			$this->template->styles = array_merge($this->template->styles, $styles);
 			$this->template->scripts = array_merge($this->template->scripts, $scripts);
 			
