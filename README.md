@@ -3,19 +3,19 @@ Kohana-Useradmin Module
 
 This module gives a simple but complete user authentication solution. Your users can register, login/logout,
 view their profile details and change them, as well as request password-reset links via email.
-A user with admin role can administer users, creating, editing and deleting them on the admin page.
+A user with admin role can administer users, create, edit and delete them on the admin page.
 
 **NEW: Upgraded to support Kohana 3.2.x!**
 
 ### INSTALLATION NOTES ###
 **Database:** Use the schema.sql to create all needed tables in your database,
 be sure to backup all your tables that have the same names as those created by the useradmin module.
-Although the schema is based on the schema of the official Kohana auth/orm modules it is not the same!
+Although the schema is based on the schema of the official Kohana auth/orm modules it slightly differs and has additional tables!
 
 In case you already used the Kohana auth schema you may want to check if the password hashes used are compatible with the useradmin ones.
 
 **Enable this module before the Kohana Auth and ORM modules or it will not work.**
-The useradmin module must shadow the classes Auth_ORM and Model_User as well as have
+The useradmin module must shadow the classes Auth_ORM and Model_User as well as
 make the useradmin config available to the Auth class.
 
 	Kohana::modules(array(
@@ -41,12 +41,13 @@ That is because when using the __() translation function for output, Kohana just
 Translations have been added using the kohana-i18nget module that easily extracts all translation strings and creates a language file for you:
 <https://github.com/rafsoaken/kohana-i18nget>
 
-If a language you fancy is not yet included in the useradmin module, we recommend adding the kohana-i18nget,
-then adding the new language to the i18nget config file and then calling from your project root(from commandline):
+If a language you fancy is not yet included in the useradmin module, we recommend adding the kohana-i18nget module (don't forget to enable it),
+then adding the new language to the kohana-i18nget config file and then calling from your project root(from commandline):
 
     php index.php --uri=i18nget/generate/useradmin/useradmin
+    # the first useradmin is where translation strings are searched for, the second is the target folder for the i18n files
 
-That generates the translation file for the new language in useradmin/i18n/lang.php with all the missing translation keys that are used in the useradmin module.
+This generates the translation file for the new language in MODPATH/useradmin/i18n/lang.php with all the missing translation keys that are used in the useradmin module.
 Translations for a new language should then not take more than half an hour, and you are ready to go. Please consider making your translation available to the project.
 
 
@@ -91,6 +92,7 @@ I would like to thank:
 ### CHANGELOG ###
 
 Jan 29th 2011:
+
 * Upgraded for Kohana 3.2
 * Better Installation instructions for less frustration
 * Added english and german translation files
