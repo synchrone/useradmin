@@ -21,6 +21,16 @@ return array(
        */
       'login_jail_time' => "5 minutes",
 
+      /**
+       * You need to set a non empty cookie salt string in order to enable the "remember.me" option for login
+       *
+       * You can do this here or you set it in the bootstrap.php file like so:
+       * Cookie::$salt = 'your salt ..';
+       *
+       * A salt set in bootstrap.php takes precedence over the one set in the useradmin config
+       */
+      'cookie_salt' => '',
+
     ),
 
     /**

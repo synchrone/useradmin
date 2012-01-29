@@ -33,3 +33,10 @@ Route::set('css', '<dir>(/<file>)', array('file' => '.+', 'dir' => '(css|img)'))
 		'dir'       => NULL,
 	));
 
+//set the cookie salt if it is not yet set
+if( ! Cookie::$salt )
+{
+    $auth = Kohana::$config->load('useradmin.auth');
+    Cookie::$salt = $auth['cookie_salt'];
+}
+

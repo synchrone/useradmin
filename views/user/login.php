@@ -30,12 +30,14 @@ echo $form->password('password', null, array('class' => 'text twothirds'));
 
 
 $authClass = new ReflectionClass(get_class(Auth::instance()));
-if($authClass->hasMethod('auto_login'))
+
+//set a valid salt in useradmin config or your bootstrap.php
+if( $authClass->hasMethod('auto_login') AND Cookie::$salt )
 {
-echo '<li>'.Kohana_Form::checkbox('remember','remember',false,array('style'=>'margin-right: 10px','id'=>'remember')).
+    echo '<li>'.Kohana_Form::checkbox('remember','remember',false,array('style'=>'margin-right: 10px','id'=>'remember')).
             $form->label('remember', __('remember.me'),array('style'=>'display: inline')).
             $form->submit(NULL, __('login'),array('style'=>'float: right;')).
-     '</li>';
+        '</li>';
     echo '</ul>';
 }
 else
@@ -43,7 +45,9 @@ else
     echo '</ul>';
     echo $form->submit(NULL, __('login'));
 }
+
 echo $form->close();
+
 echo '</td><td width="5" style="border-right: 1px solid #DDD;">&nbsp;</td><td><td style="padding-left: 2px; vertical-align: top;">';
 
 echo '<ul>';
