@@ -47,7 +47,7 @@ echo $form->close();
 echo '</td><td width="5" style="border-right: 1px solid #DDD;">&nbsp;</td><td><td style="padding-left: 2px; vertical-align: top;">';
 
 echo '<ul>';
-echo '<li style="height: 61px">'.__('?dont.have.account').' '.Html::anchor('user/register', __('register.new.account')).'.</li>';
+echo '<li style="height: 61px">'.__('?dont.have.account').'<br />'.Html::anchor('user/register', __('register.new.account')).'.</li>';
 $options = array_filter(Kohana::$config->load('useradmin.providers'));
 if(!empty($options)) {
    echo '<li style="padding-bottom: 8px;"><label>'.__('register.or.providerchange').':</label></li>';

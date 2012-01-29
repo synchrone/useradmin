@@ -427,24 +427,28 @@ class Useradmin_Controller_User extends Controller_App {
 				// send an email with the account reset token
 				$user->reset_token = $user->generate_password(32);
 				$user->save();
-                
-				$mailer = Email::connect();
-                
-				// Create complex Swift_Message object stored in $message
-				// MUST PASS ALL PARAMS AS REFS
+
+                //create all email fields we need
 				$subject = __('account.password.reset');
 				$to = $_POST['reset_email'];
 				$from = Kohana::$config->load('useradmin')->email_address;
+				$from_name = Kohana::$config->load('useradmin')->email_address_name;
+
 				$body = __("email.password.reset.message.body", array(
 					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE), 
 					':reset_link' => URL::site('user/reset', TRUE), 
 					':reset_token' => $user->reset_token, 
 					':username' => $user->username
 				));
-                
-				// FIXME: Test if Swift_Message has been found.
-				$message_swift = Swift_Message::newInstance($subject, $body)->setFrom($from)->setTo($to);
-				if ($mailer->send($message_swift))
+
+                $mail = Email::factory($subject, $body)
+                    ->to($to)
+                    ->from($from, $from_name);
+
+                $failed = array();
+                $mail->send($failed);
+
+				if ( !count($failed) )
 				{
 					Message::add('success', __('password.reset.email.sent').'.');
 					$this->request->redirect('user/login');
@@ -454,7 +458,8 @@ class Useradmin_Controller_User extends Controller_App {
 					Message::add('failure', __('could.not.send.email').'.');
 				}
 			}
-			else 
+			else
+            {
 				if ($user->username == 'admin')
 				{
 					Message::add('error', __('no.admin.account.email.password.reset'));
@@ -463,6 +468,7 @@ class Useradmin_Controller_User extends Controller_App {
 				{
 					Message::add('error', __('user.account.not.found'));
 				}
+            }
 		}
 		$this->template->content = View::factory('user/reset/forgot');
 	}
