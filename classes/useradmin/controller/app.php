@@ -12,7 +12,7 @@ class Useradmin_Controller_App extends Controller {
 	/**
 	 * @var string Filename of the template file.
 	 */
-	public $template = 'template/default';
+	public $template = 'template/useradmin';
 
 	/**
 	 * @var boolean Whether the template file should be rendered automatically.
@@ -37,6 +37,11 @@ class Useradmin_Controller_App extends Controller {
 	 * 'moderatorpanel' => array('login', 'moderator') will only allow users with the roles login and moderator to access action_moderatorpanel
 	 */
 	public $secure_actions = FALSE;
+
+    /*
+     * Page title in template
+     */
+	public $module_title = 'Useradmin for Kohana';
 
     protected $session;
     
