@@ -36,7 +36,7 @@ class Useradmin_Controller_User extends Controller_App {
 		'index' => 'login', 
 		'profile' => 'login', 
 		'profile_edit' => 'login', 
-		'unregister' => 'login', 
+		'unregister' => 'login',
 		'change_password' => 'login'
 	); // the others are public (forgot, login, register, reset, noaccess)
 	// logout is also public to avoid confusion (e.g. easier to specify and test post-logout page)
@@ -283,12 +283,14 @@ class Useradmin_Controller_User extends Controller_App {
 		// get the user id
 		$id = Auth::instance()->get_user()->id;
 		$user = ORM::factory('user', $id);
+
 		// KO3 ORM is lazy loading, which means we have to access a single field to actually have something happen.
 		if ($user->id != $id)
 		{
 			// If the user is not the current user, redirect
 			$this->request->redirect('user/profile');
 		}
+        
 		// check for confirmation
 		if (is_numeric($id) && isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
 		{
@@ -300,7 +302,7 @@ class Useradmin_Controller_User extends Controller_App {
 			// Delete the user
 			$user->delete($id);
 			// Delete any associated identities
-			DB::delete('user_identity')->where('user_id', '=', $id)
+			DB::delete('user_identities')->where('user_id', '=', $id)
 			                           ->execute();
 			// message: save success
 			Message::add('success', __('user.deleted').'.');

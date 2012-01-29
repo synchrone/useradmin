@@ -7,11 +7,11 @@ return array(
 	'login' => 'Login', // 16
 	'email.or.username' => 'Email oder Username', // 23
 	'password' => 'Passwort', // 26
-	'?forgot.password' => '', // 27
-	'remember.me' => 'Anmeldung merken', // 36
-	'?dont.have.account' => 'Sie sind noch nicht registriert?', // 50
-	'register.new.account' => 'Neuen User registrieren', // 50
-	'register.or.providerchange' => 'Zur Registration / zum Anmelden klicken Sie bitte auf Ihren Konto Provider', // 53
+	'?forgot.password' => 'Sie haben Ihr Passwort vergessen?', // 27
+	'remember.me' => 'Angemeldet bleiben', // 38
+	'?dont.have.account' => 'Sie sind noch nicht registriert?', // 54
+	'register.new.account' => 'Neuen User registrieren', // 54
+	'register.or.providerchange' => 'Zur Registration / zum Anmelden klicken Sie bitte auf Ihren Konto Provider', // 57
 
 	// \views\user\noaccess.php
 	'access.denied' => 'Keine Zugriffsberechtigung', // 2
@@ -43,6 +43,14 @@ return array(
 	'enter.info.to.register' => 'Füllen Sie folgende Informationen aus, um sich zu registrieren', // 7
 	'register.account' => 'Neues Benutzerkonto anlegen', // 35
 
+	// \views\user\unregister.php
+    'confirm.remove.user.account' => 'Löschen des Benutzerkontos bestätigen', // 2
+    '?sure.to.remove.user.account' => 'Sind Sie sicher, dass Sie das Benutzer Konto löschen wollen?', // 10
+	'yes' => 'Ja', // 12
+	'no' => 'Nein', // 13
+    'confirm' => 'Bestätigen', // 15
+	'cancel' => 'Abbrechen', // 19
+
 	// \views\user\user_edit_form.php
 	'allowed.usernames' => 'Länge zw. 4 bis 32 Buchstaben oder Zahlen', // 2
 	'email.address' => 'Email Adresse', // 3
@@ -61,10 +69,7 @@ return array(
 	// \views\user\admin\delete.php
 	'?delete.user' => 'User löschen?', // 2
 	'?sure.to.delete.user' => 'User wirklich löschen?', // 10
-	'yes' => 'Ja', // 12
-	'no' => 'Nein', // 13
 	'delete' => 'löschen', // 14
-	'cancel' => 'abbrechen', // 18
 
 	// \views\user\admin\edit.php
 	'?edit.or.add.user' => 'User editieren oder hinzufügen?', // 18
@@ -111,9 +116,9 @@ return array(
 	'captcha.incorrect' => 'Captcha ist nicht korrekt', // 235
 	'please.try.again' => 'Bitte versuchen Sie es nochmals', // 235
 	'close.user.account' => 'Dieses Benutzerkonto schließen', // 277
-	'user.deleted' => 'Benuter wurde gelöscht', // 306
+	'user.deleted' => 'Benutzer wurde gelöscht', // 306
 	'forgot.password' => 'Passwort vergessen', // 420
-	'account.password.reset' => 'Benutzerkonto Passwort zurücksetzen', // 435
+	'account.password.reset' => 'Benutzerkonto Passwort zurücksetzen', // 432
 	'email.password.reset.message.body' => 'Sie haven ein Passwort-Reset auf unserer Seite angefragt.
 
     Sie können jetzt Ihr Passwort zurücksetzen, indem Sie diesen Link aufrufen:
@@ -127,27 +132,27 @@ Falls der Link nicht geklickt werden kann, kopieren Sie bitte folgenden Link in 
 Und dann kopieren Sie bitte die Reset Kennung :reset_token in das vorgesehene Feld.
 Ihr Benutzername ist: :username
 
-', // 438
-	'password.reset.email.sent' => 'Ein Email mit einem Passwort-Reset Link wurde an Sie verschickt', // 449
-	'could.not.send.email' => 'Die Email konnte nicht verschickt werden', // 454
-	'no.admin.account.email.password.reset' => 'Es kann kein Passwort-Reset Link für ein Adminkonto verschickt werden', // 460
-	'user.account.not.found' => 'Benutzerkonto konnte nicht gefunden werden', // 464
-	'email.password.reset.not.enabled' => 'Passwort Reset via Email ist nicht aktiviert. Bitte kontaktieren Sie den Administrator der Seite, um das für Sie zu tun', // 478
-	'password.reset' => 'Passwort zurücksetzen', // 505
-	'your.new.password' => 'Ihr neues Passwort', // 507
-	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an', // 509
-	'change.password' => 'Passwort ändern', // 525
-	'unable.to.change.password.?passwords.match' => 'Passwort konnte nicht geändert werden, weil die Passwörter nicht übereinstimmen', // 552
-	'already.logged.in' => 'Sie sind schon angemeldet', // 574
-	'provider.not.enabled.select.different.or.login' => 'Dieser Konto Provider ist nicht aktiviert. Bitte wählen Sie einen anderen aus, oder melden Sie sich hier direkt an.', // 590
-	'click.yes.to.associate.account' => 'Klicken Sie "Ja", um dieses Provider Konto mit dem Benutzerkonto auf dieser Seite zu verbinden', // 622
-	'user.account.associated.with.provider' => 'Ihr Benutzerkonto wurde erfolgreich mit dem Provider Konto verbunden', // 675
+', // 437
+	'password.reset.email.sent' => 'Ein Email mit einem Passwort-Reset Link wurde an Sie verschickt', // 453
+	'could.not.send.email' => 'Die Email konnte nicht verschickt werden', // 458
+	'no.admin.account.email.password.reset' => 'Es kann kein Passwort-Reset Link für ein Adminkonto verschickt werden', // 465
+	'user.account.not.found' => 'Benutzerkonto konnte nicht gefunden werden', // 469
+	'email.password.reset.not.enabled' => 'Passwort Reset via Email ist nicht aktiviert. Bitte kontaktieren Sie den Administrator der Seite, um das für Sie zu tun', // 484
+	'password.reset' => 'Passwort zurücksetzen', // 511
+	'your.new.password' => 'Ihr neues Passwort', // 513
+	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an', // 515
+	'change.password' => 'Passwort ändern', // 531
+	'unable.to.change.password.?passwords.match' => 'Passwort konnte nicht geändert werden, weil die Passwörter nicht übereinstimmen', // 558
+	'already.logged.in' => 'Sie sind schon angemeldet', // 580
+	'provider.not.enabled.select.different.or.login' => 'Dieser Konto Provider ist nicht aktiviert. Bitte wählen Sie einen anderen aus, oder melden Sie sich hier direkt an.', // 596
+	'click.yes.to.associate.account' => 'Klicken Sie "Ja", um dieses Provider Konto mit dem Benutzerkonto auf dieser Seite zu verbinden', // 628
+	'user.account.associated.with.provider' => 'Ihr Benutzerkonto wurde erfolgreich mit dem Provider Konto verbunden', // 681
 	'unable.to.associate.account.with.provider' => 'Es war leider nicht möglich Ihr Prvider Konto mit Ihrem Benutzerkonto zu verbinden.
-        Bitte versichern Sie sich, dass noch kein anderes Benutzerkonto mit dem von Ihnen gewählten Provider Konto verbunden ist.', // 683
-	'error.associating.account.with.provider' => 'Es gab einen Fehler beim Verbinden des angegebenen Provider Kontos mit Ihrem Benutzerkonto', // 691
-	'twitter.no.email.retrive.support' => 'Zur erfolgreichen Verbindung Ihres Twitter Kontos mit Ihrem Benutzerkonto geben Sie jetzt bitte noch Ihre Email Adresse an', // 777
-	'logged.in.but.account.emails.do.not.match' => 'Sie sind angemeldet, aber die Email Adresse Ihres Provider Kontos stimmt nicht mit der Email Adresse Ihres Benutzerkontos überein', // 807
-	'retrieving.info.from.provider.failed.register.below' => 'Es gab Fehler beim Versuch die Provider Kontodaten abzurufen. Bitte registrieren Sie sich unterhalb', // 813
+        Bitte versichern Sie sich, dass noch kein anderes Benutzerkonto mit dem von Ihnen gewählten Provider Konto verbunden ist.', // 689
+	'error.associating.account.with.provider' => 'Es gab einen Fehler beim Verbinden des angegebenen Provider Kontos mit Ihrem Benutzerkonto', // 697
+	'twitter.no.email.retrive.support' => 'Zur erfolgreichen Verbindung Ihres Twitter Kontos mit Ihrem Benutzerkonto geben Sie jetzt bitte noch Ihre Email Adresse an', // 783
+	'logged.in.but.account.emails.do.not.match' => 'Sie sind angemeldet, aber die Email Adresse Ihres Provider Kontos stimmt nicht mit der Email Adresse Ihres Benutzerkontos überein', // 813
+	'retrieving.info.from.provider.failed.register.below' => 'Es gab Fehler beim Versuch die Provider Kontodaten abzurufen. Bitte registrieren Sie sich unterhalb', // 819
 
 	// \classes\useradmin\controller\admin\user.php
 	'user.administration' => 'User Verwaltung', // 43

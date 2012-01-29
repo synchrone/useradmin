@@ -8,10 +8,10 @@ return array(
 	'email.or.username' => 'Email or Username', // 23
 	'password' => 'Password', // 26
 	'?forgot.password' => 'Forgot your password?', // 27
-	'remember.me' => 'Remember me', // 36
-	'?dont.have.account' => 'Don\'t have an account?', // 50
-	'register.new.account' => 'Register a new account', // 50
-	'register.or.providerchange' => 'To register / log in using another account, please click your provider', // 53
+	'remember.me' => 'Remember me', // 38
+	'?dont.have.account' => 'Don\'t have an account?', // 54
+	'register.new.account' => 'Register a new account', // 54
+	'register.or.providerchange' => 'To register / log in using another account, please click your provider', // 57
 
 	// \views\user\noaccess.php
 	'access.denied' => 'Access denied', // 2
@@ -43,6 +43,14 @@ return array(
 	'enter.info.to.register' => 'Fill in the information below to register.', // 7
 	'register.account' => 'Register new account', // 35
 
+	// \views\user\unregister.php
+    'confirm.remove.user.account' => 'Confirm removing your user account', // 2
+    '?sure.to.remove.user.account' => 'Are you sure you want to remove your user account?', // 10
+	'yes' => 'Yes', // 12
+	'no' => 'No', // 13
+    'confirm' => 'Confirm', // 15
+	'cancel' => 'Cancel', // 19
+
 	// \views\user\user_edit_form.php
 	'allowed.usernames' => 'Length between 4-32 characters. Letters, numbers, dot and underscore are allowed characters.', // 2
 	'email.address' => 'Email address', // 3
@@ -61,10 +69,7 @@ return array(
 	// \views\user\admin\delete.php
 	'?delete.user' => 'Delete user?', // 2
 	'?sure.to.delete.user' => 'Are you sure you want to delete user ":user"', // 10
-	'yes' => 'Yes', // 12
-	'no' => 'No', // 13
 	'delete' => 'Delete', // 14
-	'cancel' => 'Cancel', // 18
 
 	// \views\user\admin\edit.php
 	'?edit.or.add.user' => 'Edit/add user', // 18
@@ -113,7 +118,7 @@ return array(
 	'close.user.account' => 'Close user account', // 277
 	'user.deleted' => 'User deleted', // 306
 	'forgot.password' => 'Forgot Password', // 420
-	'account.password.reset' => 'Account password reset', // 435
+	'account.password.reset' => 'Account password reset', // 432
 	'email.password.reset.message.body' => 'You have requested a password reset. You can reset password to your account by visiting the page at:
 
 :reset_token_link
@@ -123,28 +128,28 @@ If the above link is not clickable, please visit the following page:
 
 and copy/paste the following Reset Token: :reset_token
 Your user account name is: :username
-', // 438
-	'password.reset.email.sent' => 'Password reset email sent', // 449
-	'could.not.send.email' => 'Could not send email', // 454
-	'no.admin.account.email.password.reset' => 'Admin account password cannot be reset via email.', // 460
-	'user.account.not.found' => 'User account could not be found.', // 464
-	'email.password.reset.not.enabled' => 'Password reset via email is not enabled. Please contact the site administrator to reset your password.', // 478
-	'password.reset' => 'Password reset', // 505
-	'your.new.password' => 'Your password has been reset to: ":password".', // 507
-	'please.log.in.below' => 'Please log in below.', // 509
-	'change.password' => 'Change password', // 525
-	'unable.to.change.password.?passwords.match' => 'Password could not be changed, please make sure that the passwords match.', // 552
-	'already.logged.in' => 'You are already logged in', // 574
-	'provider.not.enabled.select.different.or.login' => 'Provider is not enabled; please select another provider or log in normally.', // 590
-	'click.yes.to.associate.account' => 'Please click Yes to confirm associating the account.', // 622
-	'user.account.associated.with.provider' => 'Your user account has been associated with this provider.', // 675
+', // 437
+	'password.reset.email.sent' => 'Password reset email sent', // 453
+	'could.not.send.email' => 'Could not send email', // 458
+	'no.admin.account.email.password.reset' => 'Admin account password cannot be reset via email.', // 465
+	'user.account.not.found' => 'User account could not be found.', // 469
+	'email.password.reset.not.enabled' => 'Password reset via email is not enabled. Please contact the site administrator to reset your password.', // 484
+	'password.reset' => 'Password reset', // 511
+	'your.new.password' => 'Your password has been reset to: ":password".', // 513
+	'please.log.in.below' => 'Please log in below.', // 515
+	'change.password' => 'Change password', // 531
+	'unable.to.change.password.?passwords.match' => 'Password could not be changed, please make sure that the passwords match.', // 558
+	'already.logged.in' => 'You are already logged in', // 580
+	'provider.not.enabled.select.different.or.login' => 'Provider is not enabled; please select another provider or log in normally.', // 596
+	'click.yes.to.associate.account' => 'Please click Yes to confirm associating the account.', // 628
+	'user.account.associated.with.provider' => 'Your user account has been associated with this provider.', // 681
 	'unable.to.associate.account.with.provider' => 'We were unable to associate this account with the provider.
                             Please make sure that there are no other accounts using this provider identity,
-                            as each 3rd party provider identity can only be associated with one user account.', // 683
-	'error.associating.account.with.provider' => 'There was an error associating your account with this provider.', // 691
-	'twitter.no.email.retrive.support' => 'The Twitter API does not support retrieving your email address; you will have to enter it manually.', // 777
-	'logged.in.but.account.emails.do.not.match' => 'You are logged in, but the email received from the provider does not match the email associated with your account.', // 807
-	'retrieving.info.from.provider.failed.register.below' => 'Retrieving information from the provider failed. Please register below.', // 813
+                            as each 3rd party provider identity can only be associated with one user account.', // 689
+	'error.associating.account.with.provider' => 'There was an error associating your account with this provider.', // 697
+	'twitter.no.email.retrive.support' => 'The Twitter API does not support retrieving your email address; you will have to enter it manually.', // 783
+	'logged.in.but.account.emails.do.not.match' => 'You are logged in, but the email received from the provider does not match the email associated with your account.', // 813
+	'retrieving.info.from.provider.failed.register.below' => 'Retrieving information from the provider failed. Please register below.', // 819
 
 	// \classes\useradmin\controller\admin\user.php
 	'user.administration' => 'User Administration', // 43
