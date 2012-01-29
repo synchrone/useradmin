@@ -142,8 +142,8 @@ Ihr Benutzername ist: :username
 	'user.account.not.found' => 'Benutzerkonto konnte nicht gefunden werden', // 471
 	'email.password.reset.not.enabled' => 'Passwort Reset via Email ist nicht aktiviert. Bitte kontaktieren Sie den Administrator der Seite, um das für Sie zu tun', // 486
 	'password.reset' => 'Passwort zurücksetzen', // 513
-	'your.new.password' => 'Ihr neues Passwort', // 515
-	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an', // 517
+	'your.new.password.is :password' => 'Ihr neues Passwort wurde zurueckgesetzt auf ":password".', // 515
+	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an.', // 517
 	'change.password' => 'Passwort ändern', // 533
 	'unable.to.change.password.?passwords.match' => 'Passwort konnte nicht geändert werden, weil die Passwörter nicht übereinstimmen', // 560
 	'already.logged.in' => 'Sie sind schon angemeldet', // 582

@@ -290,7 +290,7 @@ class Useradmin_Controller_User extends Controller_App {
 			// If the user is not the current user, redirect
 			$this->request->redirect('user/profile');
 		}
-        
+
 		// check for confirmation
 		if (is_numeric($id) && isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
 		{
@@ -437,7 +437,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$from_name = Kohana::$config->load('useradmin')->email_address_name;
 
 				$body = __("email.password.reset.message.body", array(
-					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE), 
+					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE),
 					':reset_link' => URL::site('user/reset', TRUE), 
 					':reset_token' => $user->reset_token, 
 					':username' => $user->username
@@ -497,12 +497,14 @@ class Useradmin_Controller_User extends Controller_App {
 					->where('email', '=', $_REQUEST['reset_email'])
 					->and_where('reset_token', '=', $_REQUEST['reset_token'])
 					->find();
+
 				// The admin password cannot be reset by email
 				if ($user->has('roles',ORM::factory('role',array('name'=>'admin'))))
 				{
 					Message::add('failure', __('no.admin.account.email.password.reset'));
 				}
-				else 
+				else
+                {
 					if (is_numeric($user->id) && ( $user->reset_token == $_REQUEST['reset_token'] ))
 					{
 						$password = $user->generate_password();
@@ -512,13 +514,14 @@ class Useradmin_Controller_User extends Controller_App {
 						$user->save();
 						//Message::add('success', __('password.reset'));
 						Message::add('success', '<p>' 
-						                      . __('your.new.password', array(':password' => $password)) 
+						                      . __('your.new.password.is :password', array(':password' => $password))
 						                      . '</p><p>' 
 						                      . __('please.log.in.below') 
 						                      . '</p>'
 						);
 						$this->request->redirect('user/login?username=' . $user->username);
 					}
+                }
 			}
 		}
 		$this->template->content = View::factory('user/reset/reset');

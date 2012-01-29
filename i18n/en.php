@@ -138,7 +138,7 @@ Your user account name is: :username
 	'user.account.not.found' => 'User account could not be found.', // 471
 	'email.password.reset.not.enabled' => 'Password reset via email is not enabled. Please contact the site administrator to reset your password.', // 486
 	'password.reset' => 'Password reset', // 513
-	'your.new.password' => 'Your password has been reset to: ":password".', // 515
+	'your.new.password.is :password' => 'Your password has been reset to: ":password".', // 515
 	'please.log.in.below' => 'Please log in below.', // 517
 	'change.password' => 'Change password', // 533
 	'unable.to.change.password.?passwords.match' => 'Password could not be changed, please make sure that the passwords match.', // 560
