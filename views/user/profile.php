@@ -18,7 +18,7 @@
 
       <?php
       $providers = array_filter(Kohana::$config->load('useradmin.providers'));
-      $identities = $user->user_identity->find_all();
+      $identities = $user->user_identities->find_all();
       if($identities->count() > 0) {
          echo '<h2>'.__('accounts.associated.with.profile').'</h2><p>';
          foreach($identities as $identity) {
