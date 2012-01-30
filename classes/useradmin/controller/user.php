@@ -850,15 +850,17 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			// Send the file content as the response
 			$this->response->body(file_get_contents($file));
+			
+			// Set the proper headers to allow caching
+    		$this->response->headers('Content-Type', File::mime_by_ext($ext));
+    		$this->response->headers('Content-Length', (string) filesize($file));
+    		$this->response->headers('Last-Modified', date('r', filemtime($file)));
 		}
 		else
 		{
 			// Return a 404 status
 			$this->response->status(404);
 		}
-		// Set the proper headers to allow caching
-		$this->response->headers('Content-Type', File::mime_by_ext($ext));
-		$this->response->headers('Content-Length', (string) filesize($file));
-		$this->response->headers('Last-Modified', date('r', filemtime($file)));
+
 	}
 }
