@@ -97,6 +97,13 @@ return array(
 	'next' => 'Nächste', // 35
 	'last' => 'Letzte', // 41
 
+	// \messages\register\user.php
+	'username.already.registered' => 'Dieser Benutzername ist schon vergeben.', // 6
+	'username.already.used' => 'Dieser Benutzername ist schon vergeben.', // 7
+	'email.invalid' => 'Diese Emailadresse ist ungültig.', // 10
+	'email.already.used' => 'Diese Emailadresse wurde schon verwendet.', // 11
+	'password.confirm.different' => 'Das Passwort und die Passwortwiederholung stimmen nicht überein.', // 20
+
 	// \classes\useradmin\helper\format.php
 	'never' => 'nie', // 33
 	'one.second.ago' => 'vor einer Sekunde', // 38
@@ -120,8 +127,8 @@ return array(
 	'please.try.again' => 'Bitte versuchen Sie es nochmals', // 235
 	'close.user.account' => 'Dieses Benutzerkonto schließen', // 277
 	'user.deleted' => 'Benutzer wurde gelöscht', // 308
-	'forgot.password' => 'Passwort vergessen', // 422
-	'account.password.reset' => 'Benutzerkonto Passwort zurücksetzen', // 434
+	'forgot.password' => 'Passwort vergessen', // 424
+	'account.password.reset' => 'Benutzerkonto Passwort zurücksetzen', // 436
 	'email.password.reset.message.body' => 'Sie haven ein Passwort-Reset auf unserer Seite angefragt.
 
     Sie können jetzt Ihr Passwort zurücksetzen, indem Sie diesen Link aufrufen:
@@ -135,27 +142,27 @@ Falls der Link nicht geklickt werden kann, kopieren Sie bitte folgenden Link in 
 Und dann kopieren Sie bitte die Reset Kennung :reset_token in das vorgesehene Feld.
 Ihr Benutzername ist: :username
 
-', // 439
-	'password.reset.email.sent' => 'Ein Email mit einem Passwort-Reset Link wurde an Sie verschickt', // 455
-	'could.not.send.email' => 'Die Email konnte nicht verschickt werden', // 460
-	'no.admin.account.email.password.reset' => 'Es kann kein Passwort-Reset Link für ein Adminkonto verschickt werden', // 467
-	'user.account.not.found' => 'Benutzerkonto konnte nicht gefunden werden', // 471
-	'email.password.reset.not.enabled' => 'Passwort Reset via Email ist nicht aktiviert. Bitte kontaktieren Sie den Administrator der Seite, um das für Sie zu tun', // 486
-	'password.reset' => 'Passwort zurücksetzen', // 513
-	'your.new.password.is :password' => 'Ihr neues Passwort wurde zurueckgesetzt auf ":password".', // 515
-	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an.', // 517
-	'change.password' => 'Passwort ändern', // 533
-	'unable.to.change.password.?passwords.match' => 'Passwort konnte nicht geändert werden, weil die Passwörter nicht übereinstimmen', // 560
-	'already.logged.in' => 'Sie sind schon angemeldet', // 582
-	'provider.not.enabled.select.different.or.login' => 'Dieser Konto Provider ist nicht aktiviert. Bitte wählen Sie einen anderen aus, oder melden Sie sich hier direkt an.', // 598
-	'click.yes.to.associate.account' => 'Klicken Sie "Ja", um dieses Provider Konto mit dem Benutzerkonto auf dieser Seite zu verbinden', // 630
-	'user.account.associated.with.provider' => 'Ihr Benutzerkonto wurde erfolgreich mit dem Provider Konto verbunden', // 683
+', // 441
+	'password.reset.email.sent' => 'Ein Email mit einem Passwort-Reset Link wurde an Sie verschickt', // 457
+	'could.not.send.email' => 'Die Email konnte nicht verschickt werden', // 462
+	'no.admin.account.email.password.reset' => 'Es kann kein Passwort-Reset Link für ein Adminkonto verschickt werden', // 469
+	'user.account.not.found' => 'Benutzerkonto konnte nicht gefunden werden', // 473
+	'email.password.reset.not.enabled' => 'Passwort Reset via Email ist nicht aktiviert. Bitte kontaktieren Sie den Administrator der Seite, um das für Sie zu tun', // 488
+	'password.reset' => 'Passwort zurücksetzen', // 517
+	'your.new.password.is :password' => 'Ihr neues Passwort wurde zurueckgesetzt auf ":password".', // 519
+	'please.log.in.below' => 'Bitte melden Sie sich unterhalb an.', // 521
+	'change.password' => 'Passwort ändern', // 538
+	'unable.to.change.password.?passwords.match' => 'Passwort konnte nicht geändert werden, weil die Passwörter nicht übereinstimmen', // 565
+	'already.logged.in' => 'Sie sind schon angemeldet', // 587
+	'provider.not.enabled.select.different.or.login' => 'Dieser Konto Provider ist nicht aktiviert. Bitte wählen Sie einen anderen aus, oder melden Sie sich hier direkt an.', // 603
+	'click.yes.to.associate.account' => 'Klicken Sie "Ja", um dieses Provider Konto mit dem Benutzerkonto auf dieser Seite zu verbinden', // 635
+	'user.account.associated.with.provider' => 'Ihr Benutzerkonto wurde erfolgreich mit dem Provider Konto verbunden', // 688
 	'unable.to.associate.account.with.provider' => 'Es war leider nicht möglich Ihr Prvider Konto mit Ihrem Benutzerkonto zu verbinden.
-        Bitte versichern Sie sich, dass noch kein anderes Benutzerkonto mit dem von Ihnen gewählten Provider Konto verbunden ist.', // 691
-	'error.associating.account.with.provider' => 'Es gab einen Fehler beim Verbinden des angegebenen Provider Kontos mit Ihrem Benutzerkonto', // 699
-	'twitter.no.email.retrive.support' => 'Zur erfolgreichen Verbindung Ihres Twitter Kontos mit Ihrem Benutzerkonto geben Sie jetzt bitte noch Ihre Email Adresse an', // 785
-	'logged.in.but.account.emails.do.not.match' => 'Sie sind angemeldet, aber die Email Adresse Ihres Provider Kontos stimmt nicht mit der Email Adresse Ihres Benutzerkontos überein', // 815
-	'retrieving.info.from.provider.failed.register.below' => 'Es gab Fehler beim Versuch die Provider Kontodaten abzurufen. Bitte registrieren Sie sich unterhalb', // 821
+        Bitte versichern Sie sich, dass noch kein anderes Benutzerkonto mit dem von Ihnen gewählten Provider Konto verbunden ist.', // 696
+	'error.associating.account.with.provider' => 'Es gab einen Fehler beim Verbinden des angegebenen Provider Kontos mit Ihrem Benutzerkonto', // 704
+	'twitter.no.email.retrive.support' => 'Zur erfolgreichen Verbindung Ihres Twitter Kontos mit Ihrem Benutzerkonto geben Sie jetzt bitte noch Ihre Email Adresse an', // 790
+	'logged.in.but.account.emails.do.not.match' => 'Sie sind angemeldet, aber die Email Adresse Ihres Provider Kontos stimmt nicht mit der Email Adresse Ihres Benutzerkontos überein', // 820
+	'retrieving.info.from.provider.failed.register.below' => 'Es gab Fehler beim Versuch die Provider Kontodaten abzurufen. Bitte registrieren Sie sich unterhalb', // 826
 
 	// \classes\useradmin\controller\admin\user.php
 	'user.administration' => 'User Verwaltung', // 43
