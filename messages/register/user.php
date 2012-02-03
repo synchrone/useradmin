@@ -6,19 +6,23 @@ return array(
          'username_available' => __('username.already.registered'),
          'username_not_unique' => __('username.already.used'),
        ),
+       
       'email' => array(
          'email' => __('email.invalid'), // Workaround for Bug Report #3750
          'email_available' => __('email.already.used'),
-         'email_not_unique' => __('email.already.used'),
+         'unique' => __('email.already.used'),
        ),
+
       'email_confirm' => array(
          'email' => __('email.invalid'), // Workaround for Bug Report #3750
          'email_available' => __('email.already.used'),
          'email_not_unique' => __('email.already.used'),
        ),
+
       'password' => array(
          'matches'      => __('password.confirm.different'),
       ),
+
       'password_confirm' => array(
          'matches'      => __('password.confirm.different'),
       ),
