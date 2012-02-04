@@ -50,6 +50,12 @@ then adding the new language to the kohana-i18nget config file and then calling 
 This generates the translation file for the new language in MODPATH/useradmin/i18n/lang.php with all the missing translation keys that are used in the useradmin module.
 Translations for a new language should then not take more than half an hour, and you are ready to go. Please consider making your translation available to the project.
 
+There exists a project for translating kohana messages in other 
+languages: <https://github.com/rafsoaken/kohana-language-pack>, please 
+have a look 
+and contribute your translations if 
+you language is not supported yet.
+
 **Email**
 
 For the email module I had success with the 3.2/devel branch of Shadowhands github repo here: <https://github.com/shadowhand/email/tree/3.2/develop>,
