@@ -5,7 +5,7 @@
  * @package    Useradmin/Auth
  */
 class Useradmin_Model_User extends Model_Auth_User {
-	
+
 	/**
 	 * A user has many tokens and roles
 	 *
@@ -14,11 +14,13 @@ class Useradmin_Model_User extends Model_Auth_User {
 	protected $_has_many = array(
 		// auth
 		'roles' => array('through' => 'roles_users'),
+
 		'user_tokens' => array(),
+
 		// for facebook / twitter / google / yahoo identities
-		'user_identity' => array(),
+		'user_identities' => array('model' => 'user_identity'),
 	);
-	
+
 	protected $_has_one= array(
 	);
 	

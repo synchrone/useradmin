@@ -102,7 +102,7 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 	}
 	
 	/**
-	 * Unegister multiple users
+	 * Unregister multiple users
 	 * Method to unregister existing user by Useradmin Auth module, when you set the
 	 * Model_User reference for removing a user.
 	 * 

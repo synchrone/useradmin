@@ -8,38 +8,25 @@
    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-   <div id="page">
-      <div id="header"><h1>Useradmin for Kohana</h1></div>
-      <div id="navigation">
-         <ul class="menu">
 
-             <?php
-             $session = Session::instance();
+<div id="page">
 
-             if (Auth::instance()->logged_in()){
-                echo '<li>'.Html::anchor('admin_user', 'User admin').'</li>';
-                echo '<li>'.Html::anchor('user/profile', 'My profile').'</li>';
-                echo '<li>'.Html::anchor('user/logout', 'Log out').'</li>';
-             } else {
-                echo '<li>'.Html::anchor('user/register', 'Register').'</li>';
-                echo '<li>'.Html::anchor('user/login', 'Log in').'</li>';
-             }
-           ?>
-         </ul>
-      </div>
-   <div id="content">
-    <?php
-     // output messages
-     if(Message::count() > 0) {
-       echo '<div class="block">';
-       echo '<div class="content" style="padding: 10px 15px;">';
-       echo Message::output();
-       echo '</div></div>';
-     }
-     echo $content ?>
-   </div>
+    <div id="header">
+        <h1><?php echo __('module.page.title'); ?></h1>
+    </div>
+
+    <?php echo View::factory('useradmin/menu'); ?>
+
+    <div id="content">
+        <?php
+        echo View::factory('useradmin/messages');
+        echo $content;
+        ?>
+    </div>
+
 </div>
    
-<?=$profile?>
+<?php echo $profile; ?>
+
 </body>
 </html>

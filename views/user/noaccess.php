@@ -1,7 +1,7 @@
 <div class="block">
-   <h1><?php echo __('Access denied'); ?></h1>
+   <h1><?php echo __('access.denied'); ?></h1>
    <div class="content">
-   <p><?php echo __('You do not have the necessary rights to access this functionality.'); ?></p>
+   <p><?php echo __('no.rights.to.access.functionality'); ?></p>
    </div>
 </div>
 

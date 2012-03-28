@@ -260,7 +260,7 @@ div.error {
 
 ul.menu {
      background-color: #f4f4f4;
-  background-image: url("/img/menubar-background.png");
+  background-image: url("../img/menubar-background.png");
   background-repeat: repeat-x;
   border: 0px none;
 }
@@ -345,7 +345,7 @@ a { -moz-outline: none; }
   background-color: #f2f1ee;
   border-bottom: none;
   border-bottom-width: 5px;
-  background-image: url("/img/boxbar-background.png");
+  background-image: url("../img/boxbar-background.png");
   font-size: 13px;
 }
 
@@ -485,7 +485,7 @@ input.half {
 
 .pagination a, .pagination span {
   background-color: #f4f4f4;
-  background-image: url("/img/button-background.png");
+  background-image: url("../img/button-background.png");
   color: #111;
   text-align: center;
   min-width: 15px;
@@ -514,7 +514,7 @@ input.half {
 }
 
 .pagination a:active {
-/*  background-image: url("/img/button-background-active.png"); */
+/*  background-image: url("../img/button-background-active.png"); */
   outline: none;
 }
 /* pagination */
@@ -553,30 +553,30 @@ a.associated_account {
 }
 
 a.facebook {
-   background: #FFF url(/img/small/facebook_gray.png) no-repeat center center;
+   background: #FFF url("../img/small/facebook_gray.png") no-repeat center center;
 }
 
 a.facebook:hover {
-   background: #FFF url(/img/small/facebook.png) no-repeat center center;
+   background: #FFF url("../img/small/facebook.png") no-repeat center center;
 }
 
 a.twitter {
-   background: #FFF url(/img/small/twitter_gray.png) no-repeat center center;   
+   background: #FFF url("../img/small/twitter_gray.png") no-repeat center center;   
 }
 a.twitter:hover {
-   background: #FFF url(/img/small/twitter.png) no-repeat center center;
+   background: #FFF url("../img/small/twitter.png") no-repeat center center;
 }
 a.google {
-background: #FFF url(/img/small/google_gray.png) no-repeat center center
+background: #FFF url("../img/small/google_gray.png") no-repeat center center
 }
 a.google:hover {
-background: #FFF url(/img/small/google.png) no-repeat center center
+background: #FFF url("../img/small/google.png") no-repeat center center
 }
 a.yahoo {
-background: #FFF url(/img/small/yahoo_gray.png) no-repeat center center;
+background: #FFF url("../img/small/yahoo_gray.png") no-repeat center center;
 }
 a.yahoo:hover {
-background: #FFF url(/img/small/yahoo.png) no-repeat center center;
+background: #FFF url("../img/small/yahoo.png") no-repeat center center;
 }
 
 

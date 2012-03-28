@@ -35,41 +35,41 @@ class Useradmin_Helper_Format {
 		$delta = time() - $time;
 		if ($delta < 1 * MINUTE)
 		{
-			return $delta == 1 ? "one second ago" : $delta . " seconds ago";
+			return $delta == 1 ? __("one.second.ago") : $delta . ' ' . __("seconds.ago");
 		}
 		if ($delta < 2 * MINUTE)
 		{
-			return "a minute ago";
+			return __("one.minute.ago");
 		}
 		if ($delta < 45 * MINUTE)
 		{
-			return floor($delta / MINUTE) . " minutes ago";
+			return floor($delta / MINUTE) . ' ' . __("minutes.ago");
 		}
 		if ($delta < 90 * MINUTE)
 		{
-			return "an hour ago";
+			return __("one.hour.ago");
 		}
 		if ($delta < 24 * HOUR)
 		{
-			return floor($delta / HOUR) . " hours ago";
+			return floor($delta / HOUR) . ' ' . __("hours.ago");
 		}
 		if ($delta < 48 * HOUR)
 		{
-			return "yesterday";
+			return __("yesterday");
 		}
 		if ($delta < 30 * DAY)
 		{
-			return floor($delta / DAY) . " days ago";
+			return floor($delta / DAY) . ' ' . __("days.ago");
 		}
 		if ($delta < 12 * MONTH)
 		{
 			$months = floor($delta / DAY / 30);
-			return $months <= 1 ? "one month ago" : $months . " months ago";
+			return $months <= 1 ? __("one.month.ago") : $months . ' ' . __("months.ago");
 		}
 		else
 		{
 			$years = floor($delta / DAY / 365);
-			return $years <= 1 ? "one year ago" : $years . " years ago";
+			return $years <= 1 ? __("one.year.ago") : $years . ' '. __("years.ago");
 		}
 	}
 

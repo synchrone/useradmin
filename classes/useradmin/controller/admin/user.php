@@ -40,7 +40,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	public function action_index()
 	{
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('User administration');
+		$this->template->title = __('user.administration');
 		// create a user
 		$user = ORM::factory('user');
 		// This is an example of how to use Kohana pagination
@@ -75,8 +75,10 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 */
 	public function action_edit($id = NULL)
 	{
+		$id = $this->request->param('id', $id);
+		
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Edit user');
+		$this->template->title = __('edit.user');
 		// load the content from view
 		$view = View::factory('user/admin/edit');
 		// save the data
@@ -161,7 +163,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 					);
 				}
 				// message: save success
-				Message::add('success', __('Values saved.'));
+				Message::add('success', __('values.saved'));
 				// redirect and exit
 				Request::current()->redirect('admin_user/index');
 				return;
@@ -169,7 +171,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 			else
 			{
 				// Get errors for display in view --> to AppForm
-				Message::add('error', __('Error: Values could not be saved.'));
+				Message::add('error', __('error.values.could.not.be.saved'));
 				// Note how the first param is the path to the message file (e.g. /messages/register.php)
 				$view->set('errors', $errors);
 				// Pass on the old form values --> to AppForm
@@ -215,8 +217,10 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 */
 	public function action_delete($id = NULL)
 	{
+		$id = $this->request->param('id', $id);
+		
 		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('Delete user');
+		$this->template->title = __('delete.user');
 		$user = ORM::factory('user', $id);
 		// check for confirmation
 		if (is_numeric($id) && isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
@@ -226,14 +230,14 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 				// Delete the user
 				$user->delete($id);
 				// Delete any associated identities
-				DB::delete('user_identity')->where('user_id', '=', $id)
+				DB::delete('user_identities')->where('user_id', '=', $id)
 				                           ->execute();
 				// message: save success
-				Message::add('success', __('User deleted.'));
+				Message::add('success', __('user.deleted'));
 			}
 			else
 			{
-				Message::add('success', __('User is already deleted.'));
+				Message::add('success', __('user.already.deleted'));
 			}
 			// redirect and exit
 			Request::current()->redirect('admin_user/index');
