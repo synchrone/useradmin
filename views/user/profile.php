@@ -22,7 +22,7 @@
       if($identities->count() > 0) {
          echo '<h2>'.__('accounts.associated.with.profile').'</h2><p>';
          foreach($identities as $identity) {
-            echo '<a class="associated_account" style="background: #FFF url(/img/small/'.$identity->provider.'.png) no-repeat center center"></a>';
+            echo '<a class="associated_account" style="background: #FFF url(/useradmin_assets/img/small/'.$identity->provider.'.png) no-repeat center center"></a>';
             unset($providers[$identity->provider]);
          }
          echo '<br style="clear: both;"></p>';
