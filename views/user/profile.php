@@ -14,7 +14,7 @@
       <p><?php echo $user->username ?> &mdash; <?php echo $user->email ?></p>
 
       <h2><?php echo __('login.activity') ?> </h2>
-      <p>Last login was <?php echo date('F jS, Y', $user->last_login) ?>, at <?php echo date('h:i:s a', $user->last_login) ?>.<br/><?php echo __('total.nbr.logins') ?> <?php echo $user->logins ?></p>
+      <p><?php echo __('last.login').' '.date('F jS, Y', $user->last_login) ?>, at <?php echo date('h:i:s a', $user->last_login) ?>.<br/><?php echo __('total.nbr.logins') ?> <?php echo $user->logins ?></p>
 
       <?php
       $providers = array_filter(Kohana::$config->load('useradmin.providers'));
