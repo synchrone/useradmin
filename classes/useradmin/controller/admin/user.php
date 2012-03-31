@@ -56,8 +56,8 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		// Get the items for the query
 		$sort = isset($_GET['sort']) ? $_GET['sort'] : 'username'; // set default sorting direction here
 		$dir = isset($_GET['dir']) ? 'DESC' : 'ASC';
-		$result = $user->limit($pagination->items_per_page)
-			->offset($pagination->offset)
+		$result = $user->limit($pagination->__get('items_per_page'))
+			->offset($pagination->__get('offset'))
 			->order_by($sort, $dir)
 			->find_all();
 		// render view
