@@ -29,7 +29,7 @@ return array(
 	'user.profile' => 'Профиль пользователя', // 9
 	'your.user.information' => 'Это ваши пользовательские данные', // 11
 	'username' => 'Имя пользователя', // 13
-	'email' => 'Email', // 13
+	'email address' => 'Email', // 13
 	'login.activity' => 'Активность', // 16
 	'total.nbr.logins' => 'Общее число посещений', // 17
 	'accounts.associated.with.profile' => 'Учетные записи, ассоциированные с вашей', // 23

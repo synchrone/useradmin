@@ -29,7 +29,7 @@ return array(
 	'user.profile' => 'User Profil', // 9
 	'your.user.information' => 'Ihr Benutzerkonto', // 11
 	'username' => 'Username', // 13
-	'email' => 'Email', // 13
+	'email address' => 'Email', // 13
 	'login.activity' => 'Login Aktivität', // 16
 	'total.nbr.logins' => 'Anzahl aller Logins', // 17
 	'accounts.associated.with.profile' => 'Konten, die mit diesem Profil verbunden sind', // 23
