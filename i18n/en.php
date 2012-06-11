@@ -166,6 +166,9 @@ Your user account name is: :username
 	'edit.user' => 'Edit User', // 81
 	'delete.user' => 'Delete User', // 223
 	'user.already.deleted' => 'User is already deleted', // 240
-
+    'password.invalid' => 'Password or username is incorrect.',
+    'password.not_empty' => 'Password must not be empty.',
+    'username.invalid' => 'Password or username is incorrect.',
+    'username.not_empty' => 'Username must not be empty.',
 	// Orphan phrases
 );

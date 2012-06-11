@@ -3,12 +3,12 @@
 // see /system/mesages/validation.php for the defaults for each rule. These can be overridden on a per-field basis.
 return array(
       'username' => array(
-         'not_empty' => 'Username must not be empty.',
-         'invalid' => 'Password or username is incorrect.',
-       ),
+         'not_empty' => __('username.not_empty'),
+         'invalid'   => __('username.invalid'),
+      ),
       'password' => array(
-         'not_empty'      => 'Password must not be empty.',
-         'invalid' => 'Password or username is incorrect.',
+         'not_empty' => __('password.not_empty'),
+         'invalid'   => __('password.invalid'),
       ),
 );
 

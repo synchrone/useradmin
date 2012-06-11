@@ -129,7 +129,7 @@ return array(
 	'user.deleted' => 'Пользователь удален', // 308
 	'forgot.password' => 'Забыли пароль ?', // 424
 	'account.password.reset' => 'Пароль учетной записи сброшен', // 436
-	'email.password.reset.message.body' => 'Вы запросили сброс пароля. Его можно поменять по ссылке:
+	'email.password.reset.message.body' => 'Вы запросили сброс пароля. Его можно поменять по ссылке
 
 :reset_token_link
 
@@ -169,6 +169,9 @@ return array(
 	'edit.user' => 'Редактировать пользователя', // 81
 	'delete.user' => 'Удалить пользователя', // 223
 	'user.already.deleted' => 'Пользователь уже удалён', // 240
-
+    'password.invalid' => 'Неверный пароль',
+    'password.not_empty' => 'Вы забыли ввести пароль',
+    'username.invalid' => 'Пользователя с таким именем у нас нет',
+    'username.not_empty' => 'Вы забыли ввести имя пользователя или e-mail',
 	// Orphan phrases
 );

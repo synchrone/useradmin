@@ -169,6 +169,10 @@ Ihr Benutzername ist: :username
 	'edit.user' => 'User bearbeiten', // 81
 	'delete.user' => 'User löschen', // 223
 	'user.already.deleted' => 'User ist schon gelöscht', // 240
-
+    //TODO: Translate that to german
+    'password.invalid' => 'Password or username is incorrect.',
+    'password.not_empty' => 'Password must not be empty.',
+    'username.invalid' => 'Password or username is incorrect.',
+    'username.not_empty' => 'Username must not be empty.',
 	// Orphan phrases
 );
