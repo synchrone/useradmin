@@ -119,7 +119,7 @@ CREATE TABLE `users` (
   `password` char(64) NOT NULL,
   `logins` int(10) unsigned NOT NULL DEFAULT '0',
   `last_login` int(10) unsigned DEFAULT NULL,
-  `reset_token` char(64) NOT NULL DEFAULT '',
+  `reset_token` varchar(64) NOT NULL DEFAULT '',
   `status` varchar(20) NOT NULL DEFAULT '',
   `last_failed_login` datetime NOT NULL,
   `failed_login_count` int(11) NOT NULL DEFAULT '0',
