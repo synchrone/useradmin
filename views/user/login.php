@@ -52,28 +52,18 @@ echo '</td><td width="5" style="border-right: 1px solid #DDD;">&nbsp;</td><td><t
 
 echo '<ul>';
 echo '<li style="height: 61px">'.__('?dont.have.account').'<br />'.Html::anchor('user/register', __('register.new.account')).'.</li>';
-$options = array_filter(Kohana::$config->load('useradmin.providers'));
-if(!empty($options)) {
-   echo '<li style="padding-bottom: 8px;"><label>'.__('register.or.providerchange').':</label></li>';
-   echo '<li>';
-   if(isset($options['facebook']) && $options['facebook']) {
-      echo '<a class="login_provider" style="background: #FFF url(\''.URL::site('/useradmin_assets/img/facebook.png').'\') no-repeat center center" '.
-                'href="'.URL::site('/user/provider/facebook').'"></a>';
-   }
-   if(isset($options['twitter']) && $options['twitter']) {
-      echo '<a class="login_provider" style="background: #FFF url(\''.URL::site('/useradmin_assets/img/twitter.png').'\') no-repeat center center" '.
-                'href="'.URL::site('/user/provider/twitter').'"></a>';
-   }
-   if(isset($options['google']) && $options['google']) {
-      echo '<a class="login_provider" style="background: #FFF url(\''.URL::site('/useradmin_assets/img/google.gif').'\') no-repeat center center" '.
-                'href="'.URL::site('/user/provider/google').'"></a>';
-   }
-   if(isset($options['yahoo']) && $options['yahoo']) {
-      echo '<a class="login_provider" style="background: #FFF url(\''.URL::site('/useradmin_assets/img/yahoo.gif').'\') no-repeat center center" '.
-                'href="'.URL::site('/user/provider/yahoo').'"></a>';
-   }
-   echo '<br style="clear: both;">
-   </li>';
+if(!empty($providers)) {
+    echo '<li style="padding-bottom: 8px;"><label>'.__('register.or.providerchange').':</label></li>
+    <li>';
+    foreach($providers as $provider=>$enabled)
+    {
+        if($enabled){
+            echo '<a class="login_provider" style="background: #FFF url(\''.URL::site(sprintf('/useradmin_assets/img/%s.png',$provider)).'\') no-repeat center center" '.
+                    'href="'.URL::site('/user/provider/'.$provider).'"></a>';
+        }
+    }
+    echo '<br style="clear: both;">
+    </li>';
 }
 echo '</ul>';
 echo '</td></tr></table>';

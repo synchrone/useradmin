@@ -390,10 +390,7 @@ class Useradmin_Controller_User extends Controller_App {
 			{
 				$view->set('username', htmlspecialchars($_GET['username']));
 			}
-			
-			$providers = Kohana::$config->load('useradmin.providers');
-			$view->set('facebook_enabled', 
-			isset($providers['facebook']) ? $providers['facebook'] : false);
+            $view->set('providers',Kohana::$config->load('useradmin.providers'));
 			$this->template->content = $view;
 		}
 	}
@@ -580,14 +577,16 @@ class Useradmin_Controller_User extends Controller_App {
 	 * Redirect to the provider's auth URL
 	 * @param string $provider
 	 */
-	function action_provider ($provider_name = null)
+	function action_provider ()
 	{
+
 		if (Auth::instance()->logged_in())
 		{
 			Message::add('success', __('already.logged.in'));
 			// redirect to the user account
 			$this->request->redirect('user/profile');
 		}
+        $provider_name = $this->request->param('provider');
 		$provider = Provider::factory($provider_name);
 		if ($this->request->query('code') && $this->request->query('state'))
 		{
@@ -709,8 +708,9 @@ class Useradmin_Controller_User extends Controller_App {
 	/**
 	 * Allow the user to login and register using a 3rd party provider.
 	 */
-	function action_provider_return($provider_name = null)
+	function action_provider_return()
 	{
+        $provider_name = $this->request->param('provider');
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -742,7 +742,8 @@ class Useradmin_Controller_User extends Controller_App {
 			// create new account
 			if (! Auth::instance()->logged_in())
 			{
-				// Instantiate a new user
+
+				/** @var $user Useradmin_Model_User */
 				$user = ORM::factory('user');
 				// fill in values
 				// generate long random password (maximum that passes validation is 42 characters)

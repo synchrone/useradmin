@@ -27,6 +27,11 @@ abstract class Useradmin_Provider {
 				case 'yahoo':
 					$provider = new Provider_OpenID('yahoo');
 				break;
+                default:
+                    $clsname = 'Provider_'.ucfirst($provider_name);
+                    if(class_exists($clsname)){
+                        $provider = new $clsname;
+                    }
 			}
 		}
 		return $provider;
