@@ -92,6 +92,11 @@ return array(
     'email_address_name' => 'Your Sender Name',
 
     /**
+     * Require email for users ( turn off to enable instant login for services, which provide no email (twitter, vk.com, etc)
+     * Notice: for this to work, you should change database field to allow null
+     */
+    'require_email' => true,
+    /**
      * Toggle reCaptcha support: if set, then during registration the user is shown
      * a reCaptcha which they must answer correctly (unless they are using one of the 3rd party accounts).
      *
