@@ -5,7 +5,7 @@
 return array(
 	// \views\useradmin\menu.php
 	'user.admin' => 'User Admin', // 9
-	'my.profile' => 'Mz Profile', // 11
+	'my.profile' => 'My Profile', // 11
 	'logout' => 'Logout', // 12
 	'register' => 'Register', // 16
 	'login' => 'Login', // 17
