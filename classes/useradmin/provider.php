@@ -33,10 +33,13 @@ abstract class Useradmin_Provider {
 	}
 
 	/**
-	 * Get the URL to redirect to.
-	 * @return string
+	 * Get the URL to redirect to
+	 *
+	 * @param   string  Return URL
+	 * @param   array   Extra parameters
+	 * @return  string
 	 */
-	abstract public function redirect_url($return_url);
+	abstract public function redirect_url($return_url, array $extra = array());
 
 	/**
 	 * Verify the login result and do whatever is needed to access the user data from this provider.

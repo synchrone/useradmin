@@ -26,10 +26,13 @@ class Useradmin_Provider_OpenID extends Provider {
 	}
 
 	/**
-	 * Get the URL to redirect to.
-	 * @return string
+	 * Get the URL to redirect to
+	 *
+	 * @param   string  Return URL
+	 * @param   array   Extra parameters
+	 * @return  string
 	 */
-	public function redirect_url($return_url)
+	public function redirect_url($return_url, array $extra = array())
 	{
 		$this->provider->identity  = Provider_OpenID::$config[$this->provider_name]['url'];
 		$this->provider->returnUrl = URL::site($return_url, true);
