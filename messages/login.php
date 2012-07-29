@@ -4,11 +4,15 @@
 return array(
       'username' => array(
          'not_empty' => 'Username must not be empty.',
-         'invalid' => 'Password or username is incorrect.',
+         'invalid'   => 'Password or username is incorrect.',
+       ),
+      'email' => array(
+         'not_empty' => 'Email must not be empty.',
+         'invalid'   => 'Password or email is incorrect.',
        ),
       'password' => array(
-         'not_empty'      => 'Password must not be empty.',
-         'invalid' => 'Password or username is incorrect.',
+         'not_empty' => 'Password must not be empty.',
+         'invalid'   => 'Password or username is incorrect.',
       ),
 );
 
