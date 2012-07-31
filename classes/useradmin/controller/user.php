@@ -517,7 +517,6 @@ class Useradmin_Controller_User extends Controller_App {
 						// This field does not exist in the default config:
 						//               $user->failed_login_count = 0;
 						$user->save();
-						//Message::add('success', __('password.reset'));
 						Message::add('success', '<p>' 
 						                      . __('your.new.password.is :password', array(':password' => $password))
 						                      . '</p><p>' 
@@ -793,6 +792,13 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 				catch (ORM_Validation_Exception $e)
 				{
+					/*
+					 * Redirect back to the front page in case they
+					 * try to create another account with a separate provider
+					 */
+					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
+					$this->request->redirect('user/login');
+					
 					if ($provider_name == 'twitter')
 					{
 						Message::add('error', __('twitter.no.email.retrive.support'));

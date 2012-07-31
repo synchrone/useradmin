@@ -13,8 +13,17 @@ Route::set('user/provider_return', 'user/provider_return(/<provider>)', array('p
 		'action'     => 'provider_return',
 		'provider'       => NULL,
 	));
-
-Route::set('admin_user', 'admin_user(/<action>(/<id>))',
+Route::set('user/default', 'user(/<action>(/<provider>))',
+	array(
+		'action' => '(provider|provider_return|associate|associate_return)',
+		'provider' => '.+',
+	))
+	->defaults(array(
+		'controller' => 'user',
+		'action'     => 'index',
+		'provider'   => NULL,
+	));
+Route::set('user/admin', 'admin_user(/<action>(/<id>))',
 	array(
 		'action' => '(edit|delete)',
 	))
