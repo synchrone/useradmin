@@ -24,16 +24,23 @@ class Useradmin_Provider_Facebook extends Provider {
 	}
 
 	/**
-	 * Get the URL to redirect to.
-	 * @return string
+	 * Get the URL to redirect to
+	 *
+	 * @param   string  Return URL
+	 * @param   array   Extra parameters
+	 * @return  string
 	 */
-	public function redirect_url($return_url)
+	public function redirect_url($return_url, array $extra = array())
 	{
-		return $this->facebook->getLoginUrl(array(
-			'next'       => URL::site($return_url, true), 
-			'cancel_url' => URL::site($return_url, true), 
-			'scope'  => 'email'
-		));
+		$default = array(
+			'next'       => URL::site($return_url, true),
+			'cancel_url' => URL::site($return_url, true),
+			'scope'      => 'email'
+		);
+
+		$params = array_merge($default, $extra);
+
+		return $this->facebook->getLoginUrl($params);
 	}
 
 	/**

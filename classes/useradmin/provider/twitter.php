@@ -16,6 +16,19 @@ class Useradmin_Provider_Twitter extends Provider_OAuth {
 	}
 
 	/**
+	 * Get the URL to redirect to
+	 *
+	 * @param   string  Return URL
+	 * @param   array   Extra parameters
+	 * @return  string
+	 */
+	public function redirect_url($return_url, array $extra = array())
+	{
+		// ???
+		return '';
+	}
+
+	/**
 	 * Verify the login result and do whatever is needed to access the user data from this provider.
 	 * @return bool
 	 */

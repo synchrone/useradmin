@@ -34,10 +34,13 @@ abstract class Useradmin_Provider_OAuth extends Provider {
 	}
 
 	/**
-	 * Get the URL to redirect to.
-	 * @return string
+	 * Get the URL to redirect to
+	 *
+	 * @param   string  Return URL
+	 * @param   array   Extra parameters
+	 * @return  string
 	 */
-	public function redirect_url($return_url)
+	public function redirect_url($return_url, array $extra = array())
 	{
 		// Add the callback URL to the consumer
 		$this->consumer->callback(URL::site($return_url, true));
