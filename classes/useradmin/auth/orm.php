@@ -7,6 +7,15 @@
  * @author     Gabriel R. Giannattasio
  */
 class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAuth {
+	
+	/** User Model Fields
+	 * Override in your app to add fields
+	 */
+	public $user_model_fields = array(
+		'username',
+		'password',
+		'email',
+	);
 
 	/**
 	 * Extends the Kohana Auth ORM driver to give useradmin module extras
@@ -82,15 +91,18 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 				throw new Kohana_Exception('Invalid user fields.');
 			}
 		}
-        /** @var $user Model_User */
-        $user->create_user($fields, array(
-            'username',
-            'password',
-            'email',
-        ));
-        // Add the login role to the user (add a row to the db)
-        $login_role = new Model_Role(array('name' =>'login'));
-        $user->add('roles', $login_role);
+		try 
+		{
+			$user->create_user($fields, $this->user_model_fields);
+			// Add the login role to the user (add a row to the db)
+			$login_role = new Model_Role(array('name' =>'login'));
+            $user->add('roles', $login_role);
+		} 
+		catch (ORM_Validation_Exception $e) 
+		{
+			throw $e;
+			return FALSE;
+		}
 		return TRUE;
 	}
 	

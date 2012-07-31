@@ -40,6 +40,15 @@ class Useradmin_Controller_User extends Controller_App {
 		'change_password' => 'login'
 	); // the others are public (forgot, login, register, reset, noaccess)
 	// logout is also public to avoid confusion (e.g. easier to specify and test post-logout page)
+	
+	/** User Model Fields
+	 * Override in your app to add fields
+	 */
+	public $user_model_fields = array(
+		'username', 
+		'password', 
+		'email'
+	);
 
     public function before() 
 	{
@@ -151,12 +160,7 @@ class Useradmin_Controller_User extends Controller_App {
 			}
 			try
 			{
-				$user->update_user($_POST, 
-				array(
-					'username', 
-					'password', 
-					'email'
-				));
+				$user->update_user($_POST, $this->user_model_fields);
 				// message: save success
 				Message::add('success', __('values.saved').'.');
 				// redirect and exit
@@ -197,6 +201,8 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	public function action_register()
 	{
+		if(!Kohana::$config->load('useradmin.register_enabled'))
+			$this->request->redirect('user/login');
 		// Load reCaptcha if needed
 		if (Kohana::$config->load('useradmin')->captcha)
 		{
@@ -579,7 +585,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider ()
 	{
-
+		$provider_name = $this->request->param('provider');
 		if (Auth::instance()->logged_in())
 		{
 			Message::add('success', __('already.logged.in'));
@@ -604,13 +610,14 @@ class Useradmin_Controller_User extends Controller_App {
 		return;
 	}
 
-	function action_associate($provider_name = null)
+	function action_associate()
 	{
-	if ($this->request->query('code') && $this->request->query('state'))
-	{
-		$this->action_associate_return($provider_name);
-		return;
-	}
+		$provider_name = $this->request->param('id');
+		if ($this->request->query('code') && $this->request->query('state'))
+		{
+			$this->action_associate_return($provider_name);
+			return;
+		}
 		if (Auth::instance()->logged_in())
 		{
 			if (isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
@@ -664,8 +671,9 @@ class Useradmin_Controller_User extends Controller_App {
 	 * prove that they want to trust that identity provider on your application.
 	 *
 	 */
-	function action_associate_return($provider_name = null)
+	function action_associate_return()
 	{
+		$provider_name = $this->request->param('id');
 		if (Auth::instance()->logged_in())
 		{
 			$provider = Provider::factory($provider_name);
@@ -710,7 +718,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider_return()
 	{
-        $provider_name = $this->request->param('provider');
+		$provider_name = $this->request->param('provider');
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -735,10 +743,13 @@ class Useradmin_Controller_User extends Controller_App {
 					// found, log user in
 					Auth::instance()->force_login($user);
 					// redirect to the user account
-					$this->request->redirect('user/profile');
+					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 					return;
 				}
 			}
+			// If register is disabled, don't create new account
+			if(!Kohana::$config->load('useradmin.register_enabled'))
+				$this->request->redirect('user/login');
 			// create new account
 			if (! Auth::instance()->logged_in())
 			{
@@ -763,11 +774,7 @@ class Useradmin_Controller_User extends Controller_App {
 				try
 				{
 					// If the post data validates using the rules setup in the user model
-					$user->create_user($values, array(
-						'username', 
-						'password', 
-						'email'
-					));
+					$user->create_user($values, $this->user_model_fields);
 					// Add the login role to the user (add a row to the db)
 					$login_role = new Model_Role(array(
 						'name' => 'login'
@@ -782,7 +789,7 @@ class Useradmin_Controller_User extends Controller_App {
 					// sign the user in
 					Auth::instance()->login($values['username'], $password);
 					// redirect to the user account
-					$this->request->redirect('user/profile');
+					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 				}
 				catch (ORM_Validation_Exception $e)
 				{

@@ -39,33 +39,39 @@ if( $authClass->hasMethod('auto_login') AND Cookie::$salt )
             $form->submit(NULL, __('login'),array('style'=>'float: right;')).
         '</li>';
     echo '</ul>';
-}
-else
-{
+}else{
     echo '</ul>';
     echo $form->submit(NULL, __('login'));
 }
-
 echo $form->close();
-
 echo '</td><td width="5" style="border-right: 1px solid #DDD;">&nbsp;</td><td><td style="padding-left: 2px; vertical-align: top;">';
 
-echo '<ul>';
-echo '<li style="height: 61px">'.__('?dont.have.account').'<br />'.Html::anchor('user/register', __('register.new.account')).'.</li>';
-if(!empty($providers)) {
-    echo '<li style="padding-bottom: 8px;"><label>'.__('register.or.providerchange').':</label></li>
-    <li>';
-    foreach($providers as $provider=>$enabled)
+$registerEnabled = Kohana::$config->load('useradmin.register_enabled');
+
+if($registerEnabled || !empty($providers)) {
+    echo '<ul>';
+    if($registerEnabled)
+        echo '<li style="height: 61px">'.__('?dont.have.account').'<br />'.Html::anchor('user/register', __('register.new.account')).'.</li>';
+    if(!empty($providers)) 
     {
-        if($enabled){
-            echo '<a class="login_provider" style="background: #FFF url(\''.URL::site(sprintf('/useradmin_assets/img/%s.png',$provider)).'\') no-repeat center center" '.
-                    'href="'.URL::site('/user/provider/'.$provider).'"></a>';
+        if($registerEnabled)
+            echo '<li style="padding-bottom: 8px;"><label>'.__('register.or.providerchange').':</label></li>';
+        else
+            echo '<li style="padding-bottom: 8px;"><label>'.__('login.using.provider').':</label></li>';
+
+        echo '<li>';
+        foreach($providers as $provider=>$enabled)
+        {
+            if($enabled){
+                echo '<a class="login_provider" style="background: #FFF url(\''.URL::site(sprintf('/useradmin_assets/img/%s.png',$provider)).'\') no-repeat center center" '.
+                        'href="'.URL::site('/user/provider/'.$provider).'"></a>';
+            }
         }
+        echo '<br style="clear: both;">
+        </li>';
     }
-    echo '<br style="clear: both;">
-    </li>';
+    echo '</ul>';
 }
-echo '</ul>';
 echo '</td></tr></table>';
 ?>
       </div>

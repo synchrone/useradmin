@@ -13,7 +13,13 @@ class Useradmin_Controller_App extends Controller {
 	 * @var string Filename of the template file.
 	 */
 	public $template = 'template/useradmin';
-
+	
+	public $default_styles = array(
+        'useradmin_assets/css/style.css' => 'screen'
+	);
+	
+	public $default_scripts = array();
+	
 	/**
 	 * @var boolean Whether the template file should be rendered automatically.
 	 * 
@@ -67,7 +73,7 @@ class Useradmin_Controller_App extends Controller {
 	 */
 	public function login_required()
 	{
-		Request::current()->redirect('user/login');
+        $this->request->redirect('user/login');
 	}
 
 	/**
@@ -108,7 +114,7 @@ class Useradmin_Controller_App extends Controller {
         }
 
 		// Check user auth and role
-		$action_name = Request::$current->action();
+		$action_name = $this->request->action();
 		if (
 			// auth is required AND user role given in auth_required is NOT logged in
 			( $this->auth_required !== FALSE && Auth::instance()->logged_in($this->auth_required) === FALSE ) ||
@@ -158,12 +164,8 @@ class Useradmin_Controller_App extends Controller {
 	{
 		if ($this->auto_render === TRUE)
 		{
-			$styles = array(
-				'useradmin_assets/css/style.css' => 'screen'
-			);
-
-			$scripts = array();
-
+			$styles = $this->default_styles;
+			$scripts = $this->default_scripts;
 			$this->template->styles = array_merge($this->template->styles, $styles);
 			$this->template->scripts = array_merge($this->template->scripts, $scripts);
 			

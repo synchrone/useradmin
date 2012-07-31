@@ -18,6 +18,7 @@ return array(
 	'?dont.have.account' => 'Don\'t have an account?', // 54
 	'register.new.account' => 'Register a new account', // 54
 	'register.or.providerchange' => 'To register / log in using another account, please click your provider', // 57
+    'login.using.provider' => 'To log in using another account, please click your provider',
 
 	// \views\user\noaccess.php
 	'access.denied' => 'Access denied', // 2

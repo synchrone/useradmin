@@ -18,6 +18,7 @@ return array(
 	'?dont.have.account' => 'Нет учетной записи?', // 54
 	'register.new.account' => 'Зарегистрируйтесь!', // 54
 	'register.or.providerchange' => 'Чтобы зарегистрироваться, или войти под другой учетной записью - выберите сервис', // 57
+    'login.using.provider' => 'Выберите провайдера авторизации',
 
 	// \views\user\noaccess.php
 	'access.denied' => 'Доступ запрещен', // 2

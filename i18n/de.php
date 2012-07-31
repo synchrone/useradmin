@@ -18,6 +18,7 @@ return array(
 	'?dont.have.account' => 'Sie sind noch nicht registriert?', // 54
 	'register.new.account' => 'Neuen User registrieren', // 54
 	'register.or.providerchange' => 'Zur Registration / zum Anmelden klicken Sie bitte auf Ihren Konto Provider', // 57
+    'login.using.provider' => 'Zum Anmelden klicken Sie bitte auf Ihren Konto Provider',
 
 	// \views\user\noaccess.php
 	'access.denied' => 'Keine Zugriffsberechtigung', // 2
