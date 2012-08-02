@@ -30,7 +30,11 @@
       if(!empty($providers)) {
          echo '<h2>'.__('additional.accountproviders').'</h2><p>'.__('click.provider.icon.to.associate.account').'</p><p>';
          foreach($providers as $provider => $enabled) {
-            echo '<a class="associated_account '.$provider.'" href="'.URL::site('/user/associate/'.$provider).'"></a>';
+            if($enabled){
+                echo '<a class="associated_account '.$provider.'"
+                    style="background: #FFF url(/useradmin_assets/img/small/'.$provider.'_gray.png) no-repeat center center"
+                    href="'.URL::site('/user/associate/'.$provider).'"></a>';
+            }
          }
          echo '<br style="clear: both;"></p>';
       }
