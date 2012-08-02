@@ -226,7 +226,7 @@ class Useradmin_Controller_User extends Controller_App {
 			// optional checks (e.g. reCaptcha or some other additional check)
 			$optional_checks = true;
 			// if configured to use captcha, check the reCaptcha result
-			if (Kohana::$config->load('useradmin')->captcha)
+			if ($recaptcha_config = Kohana::$config->load('useradmin')->captcha)
 			{
 				$recaptcha_resp = recaptcha_check_answer(
 					$recaptcha_config['privatekey'], 
