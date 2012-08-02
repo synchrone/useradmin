@@ -7,7 +7,8 @@ class Useradmin_Provider_OpenID extends Provider {
 
 	protected static $config = array(
 		'google' => array('url' => 'https://www.google.com/accounts/o8/id'), 
-		'yahoo' => array('url' => 'https://me.yahoo.com/')
+		'yahoo' => array('url' => 'https://me.yahoo.com/'),
+		'yandex' => array('url' => 'http://www.yandex.ru/'),
 	);
 
 	private $provider = null;
