@@ -601,7 +601,8 @@ class Useradmin_Controller_User extends Controller_App {
 		if (is_object($provider))
 		{
 			$this->request->redirect(
-			$provider->redirect_url('/user/provider_return/' . $provider_name));
+			    $provider->redirect_url(Route::url('user/default',array('action'=>'provider_return', 'provider' => $provider_name),true))
+            );
 			return;
 		}
 		Message::add('error', __('provider.not.enabled.select.different.or.login'));
@@ -611,7 +612,7 @@ class Useradmin_Controller_User extends Controller_App {
 
 	function action_associate()
 	{
-		$provider_name = $this->request->param('id');
+		$provider_name = $this->request->param('provider');
 		if ($this->request->query('code') && $this->request->query('state'))
 		{
 			$this->action_associate_return($provider_name);
@@ -624,7 +625,9 @@ class Useradmin_Controller_User extends Controller_App {
 				$provider = Provider::factory($provider_name);
 				if (is_object($provider))
 				{
-					$this->request->redirect($provider->redirect_url('/user/associate_return/' . $provider_name));
+					$this->request->redirect(
+                        $provider->redirect_url(Route::url('user/default',array('action'=>'associate_return', 'provider' => $provider_name), true))
+                    );
 					return;
 				}
 				else
@@ -672,7 +675,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_associate_return()
 	{
-		$provider_name = $this->request->param('id');
+		$provider_name = $this->request->param('provider');
 		if (Auth::instance()->logged_in())
 		{
 			$provider = Provider::factory($provider_name);
