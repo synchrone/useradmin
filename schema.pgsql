@@ -56,7 +56,10 @@ CREATE TABLE "user_identities" (
   "user_id" integer NOT NULL,
   "provider" character varying(255) NOT NULL,
   "identity" character varying(255) NOT NULL,
-  CONSTRAINT user_identities_id_pkey PRIMARY KEY ("id")
+  CONSTRAINT user_identities_id_pkey PRIMARY KEY ("id"),
+  CONSTRAINT user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- --------------------------------------------------------
