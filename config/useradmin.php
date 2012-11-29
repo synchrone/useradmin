@@ -76,6 +76,17 @@ return array(
         * - You must have LightOpenID in /vendors/lightopenid/openid.php (bundled in the repo)
         */
        'yahoo' => true,
+
+       /**
+        * Toggle Linkedin support: if set, users can log in using their Linkedin account.
+        *
+        * Setup:
+        * - You need the extra table from schema.sql for storing 3rd party identifiers
+        * - You must enable the Kohana Core oauth module
+        * - You must register your app with Linkedin and add the information in /config/oauth.php (Kohana-Oauth's config)
+        * - You may want to specify scope in oauth config, available by key 'linkedin.scope'
+        */
+       'linkedin' => true,
     ),
 
     /**

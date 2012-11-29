@@ -94,6 +94,7 @@ Earlier writing about Kohana auth:
 + Twitter (OAuth v1.0)
 + Google (OpenID)
 + Yahoo (OpenID)
++ Linkedin (OAuth v1.0)
 
 ### MODULES USED ###
 
