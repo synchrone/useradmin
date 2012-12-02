@@ -51,7 +51,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('user.administration');
 		// create a user
-		$user = ORM::factory('user');
+		$user = ORM::factory('User');
 		// This is an example of how to use Kohana pagination
 		// Get the total count for the pagination
 		$total = $user->count_all();
@@ -97,12 +97,12 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 			if (is_numeric($id))
 			{
 				// EDIT: load the model with ID
-				$user = ORM::factory('user', $id);
+				$user = ORM::factory('User', $id);
 			}
 			else
 			{
 				// CREATE: do not specify id
-				$user = ORM::factory('user');
+				$user = ORM::factory('User');
 			}
 			if (empty($_POST['password']) || empty($_POST['password_confirm']))
 			{
@@ -158,14 +158,14 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 				{
 					// add() executes the query immediately, and saves the data (unlike the KO2 docs say)
 					$user->add('roles', 
-						ORM::factory('role')->where('name', '=', $role)
+						ORM::factory('Role')->where('name', '=', $role)
 						                    ->find()
 					);
 				}
 				// message: save success
 				Message::add('success', __('values.saved'));
 				// redirect and exit
-				Request::current()->redirect('admin_user/index');
+				$this->redirect('admin_user/index', 302);
 				return;
 			}
 			else
@@ -182,7 +182,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		if (is_numeric($id))
 		{
 			// instantiatiate a new model
-			$user = ORM::factory('user', $id);
+			$user = ORM::factory('User', $id);
 			$view->set('data', $user->as_array());
 			// retrieve roles into array
 			$roles = array();
@@ -200,7 +200,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		}
 		// get all roles
 		$all_roles = array();
-		$role_model = ORM::factory('role');
+		$role_model = ORM::factory('Role');
 		foreach ($role_model->order_by('name')->find_all() as $role)
 		{
 			$all_roles[$role->name] = $role->description;
@@ -220,14 +220,14 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		$id = $this->request->param('id');
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('delete.user');
-		$user = ORM::factory('user', $id);
+		$user = ORM::factory('User', $id);
 		// check for confirmation
 		if (is_numeric($id) && isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
 		{
 			if ($user->loaded())
 			{
 				// Delete the user
-				$user->delete($id);
+				$user->delete();
 				// message: save success
 				Message::add('success', __('user.deleted'));
 			}
@@ -236,7 +236,7 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 				Message::add('success', __('user.already.deleted'));
 			}
 			// redirect and exit
-			Request::current()->redirect('admin_user/index');
+			$this->redirect('admin_user/index', 302);
 			return;
 		}
 		// display confirmation

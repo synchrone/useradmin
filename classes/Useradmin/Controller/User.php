@@ -52,42 +52,43 @@ class Useradmin_Controller_User extends Controller_App {
 
     public function before() 
 	{
-		$fullBaseUrl = Url::base(true);
+		$fullBaseUrl = URL::base(true);
 
 		//was user on our site?
-        if( strpos($this->request->referrer(), $fullBaseUrl) === 0 )
-		{
-			//now check that a controller set, it wasn't the user controller, and that the session var "noReturn" is not false
+		if( strpos($this->request->referrer(), $fullBaseUrl) === 0 )
+		  {
+		    //now check that a controller set, it wasn't the user controller, and that the session var "noReturn" is not false
+		  
+		    $uri = parse_url($this->request->referrer(), PHP_URL_PATH);
 			
-            $uri = parse_url($this->request->referrer(), PHP_URL_PATH);
+		    // correct the path for url_base and index_file, in part taken from Kohana_Request::detect_uri()
+		    // Get the path from the base URL, including the index file
+		    $base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
+		  
+		    if (strpos($uri, $base_url) === 0)
+		      {
+			// Remove the base URL from the URI
+			$uri = (string) substr($uri, strlen($base_url));
+		      }
+		    
+		    if (Kohana::$index_file AND strpos($uri, Kohana::$index_file) === 0)
+		      {
+			// Remove the index file from the URI
+			$uri = (string) substr($uri, strlen(Kohana::$index_file));
+		      }
+		    
+		    $refRequest = new Request($uri, array(), FALSE);
+		    $processedRef = Request::process($refRequest);
 			
-			// correct the path for url_base and index_file, in part taken from Kohana_Request::detect_uri()
-			// Get the path from the base URL, including the index file
-			$base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
-			
-			if (strpos($uri, $base_url) === 0)
-			{
-				// Remove the base URL from the URI
-				$uri = (string) substr($uri, strlen($base_url));
-			}
-
-			if (Kohana::$index_file AND strpos($uri, Kohana::$index_file) === 0)
-			{
-				// Remove the index file from the URI
-				$uri = (string) substr($uri, strlen(Kohana::$index_file));
-			}
-
-            $processedRef = Request::process_uri($uri);
-			
-            $referrerController = Arr::path(
-                $processedRef,
-                'params.controller',
-                false
-            );
-
-            if($referrerController && $referrerController != 'user' && !Session::instance()->get('noReturn',false)){
-                Session::instance()->set('returnUrl',$this->request->referrer());
-            }
+		    $referrerController = Arr::path(
+						    $processedRef,
+						    'params.controller',
+						    false
+						    );
+		    
+		    if($referrerController && $referrerController != 'user' && !Session::instance()->get('noReturn',false)){
+		      Session::instance()->set('returnUrl',$this->request->referrer());
+		    }
 
         }
 
@@ -104,11 +105,11 @@ class Useradmin_Controller_User extends Controller_App {
 		// if the user has the admin role, redirect to admin_user controller
 		if (Auth::instance()->logged_in('admin'))
 		{
-			$this->request->redirect('admin_user/index');
+			$this->redirect('admin_user/index', 302);
 		}
 		else
 		{
-			$this->request->redirect('user/profile');
+			$this->redirect('user/profile', 302);
 		}
 	}
 
@@ -132,7 +133,7 @@ class Useradmin_Controller_User extends Controller_App {
 		if (Auth::instance()->logged_in() == false)
 		{
 			// No user is currently logged in
-			$this->request->redirect('user/login');
+			$this->redirect('user/login', 302);
 		}
 		$view = $this->template->content = View::factory('user/profile');
 		// retrieve the current user and set the view variable accordingly
@@ -164,7 +165,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// message: save success
 				Message::add('success', __('values.saved').'.');
 				// redirect and exit
-				$this->request->redirect('user/profile');
+				$this->redirect('user/profile', 302);
 				return;
 			}
 			catch (ORM_Validation_Exception $e)
@@ -202,7 +203,7 @@ class Useradmin_Controller_User extends Controller_App {
 	public function action_register()
 	{
 		if(!Kohana::$config->load('useradmin.register_enabled'))
-			$this->request->redirect('user/login');
+			$this->redirect('user/login', 302);
 		// Load reCaptcha if needed
 		if (Kohana::$config->load('useradmin')->captcha)
 		{
@@ -216,7 +217,7 @@ class Useradmin_Controller_User extends Controller_App {
 		if (Auth::instance()->logged_in() != false)
 		{
 			// redirect to the user account
-			$this->request->redirect('user/profile');
+			$this->redirect('user/profile', 302);
 		}
 		// Load the view
 		$view = View::factory('user/register');
@@ -251,7 +252,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// sign the user in
 				Auth::instance()->login($_POST['username'], $_POST['password']);
 				// redirect to the user account
-				$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+				$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 			}
 			catch (ORM_Validation_Exception $e)
 			{
@@ -284,17 +285,17 @@ class Useradmin_Controller_User extends Controller_App {
 		if (Auth::instance()->logged_in() == false)
 		{
 			// No user is currently logged in
-			$this->request->redirect('user/login');
+			$this->redirect('user/login', 302);
 		}
 		// get the user id
 		$id = Auth::instance()->get_user()->id;
-		$user = ORM::factory('user', $id);
+		$user = ORM::factory('User', $id);
 
 		// KO3 ORM is lazy loading, which means we have to access a single field to actually have something happen.
 		if ($user->id != $id)
 		{
 			// If the user is not the current user, redirect
-			$this->request->redirect('user/profile');
+			$this->redirect('user/profile', 302);
 		}
 
 		// check for confirmation
@@ -312,7 +313,7 @@ class Useradmin_Controller_User extends Controller_App {
 			                           ->execute();
 			// message: save success
 			Message::add('success', __('user.deleted').'.');
-			$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+			$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 		}
 		// display confirmation
 		$this->template->content = View::factory('user/unregister')
@@ -360,7 +361,7 @@ class Useradmin_Controller_User extends Controller_App {
 			if (Auth::instance()->logged_in() != 0)
 			{
 				// redirect to the user account
-				$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+				$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 			}
 			
 			$view = View::factory('user/login');
@@ -373,7 +374,7 @@ class Useradmin_Controller_User extends Controller_App {
                                             Arr::get($_REQUEST,'remember',false)!=false)
                 ){
 					// redirect to the user account
-					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+					$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 					return;
 				}
 				else
@@ -409,7 +410,7 @@ class Useradmin_Controller_User extends Controller_App {
 		// Sign out the user
 		Auth::instance()->logout();
 		// redirect to the user account and then the signin page if logout worked as expected
-		$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+		$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 	}
 
 	/**
@@ -421,13 +422,13 @@ class Useradmin_Controller_User extends Controller_App {
 		if (! Kohana::$config->load('useradmin')->email)
 		{
 			Message::add('error', 'email.password.reset.not.enabled');
-			$this->request->redirect('user/register');
+			$this->redirect('user/register', 302);
 		}
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('forgot.password');
 		if (isset($_POST['reset_email']))
 		{
-			$user = ORM::factory('user')->where('email', '=', $_POST['reset_email'])->find();
+			$user = ORM::factory('User')->where('email', '=', $_POST['reset_email'])->find();
 			// admin passwords cannot be reset by email
 			if (is_numeric($user->id) && ( $user->username != 'admin' ))
 			{
@@ -458,7 +459,7 @@ class Useradmin_Controller_User extends Controller_App {
 				if ( !count($failed) )
 				{
 					Message::add('success', __('password.reset.email.sent').'.');
-					$this->request->redirect('user/login');
+					$this->redirect('user/login', 302);
 				}
 				else
 				{
@@ -489,7 +490,7 @@ class Useradmin_Controller_User extends Controller_App {
 		if (! Kohana::$config->load('useradmin')->email)
 		{
 			Message::add('error', __('email.password.reset.not.enabled'));
-			$this->request->redirect('user/register');
+			$this->redirect('user/register', 302);
 		}
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('reset.password');
@@ -498,13 +499,13 @@ class Useradmin_Controller_User extends Controller_App {
 			// make sure that the reset_token has exactly 32 characters (not doing that would allow resets with token length 0)
 			if (( strlen($_REQUEST['reset_token']) == 32 ) && ( strlen(trim($_REQUEST['reset_email'])) > 1 ))
 			{
-				$user = ORM::factory('user')
+				$user = ORM::factory('User')
 					->where('email', '=', $_REQUEST['reset_email'])
 					->and_where('reset_token', '=', $_REQUEST['reset_token'])
 					->find();
 
 				// The admin password cannot be reset by email
-				if ($user->has('roles',ORM::factory('role',array('name'=>'admin'))))
+				if ($user->has('roles',ORM::factory('Role',array('name'=>'admin'))))
 				{
 					Message::add('failure', __('no.admin.account.email.password.reset'));
 				}
@@ -523,7 +524,7 @@ class Useradmin_Controller_User extends Controller_App {
 						                      . __('please.log.in.below') 
 						                      . '</p>'
 						);
-						$this->request->redirect('user/login?username=' . $user->username);
+						$this->redirect('user/login?username=' . $user->username, 302);
 					}
                 }
 			}
@@ -557,7 +558,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// message: save success
 				Message::add('success', __('values.saved'));
 				// redirect and exit
-				$this->request->redirect('user/index'); //index will redir ya whereever you need
+				$this->redirect('user/index', 302); //index will redir ya whereever you need
 				return;
 			}
 			else
@@ -589,7 +590,7 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			Message::add('success', __('already.logged.in'));
 			// redirect to the user account
-			$this->request->redirect('user/profile');
+			$this->redirect('user/profile', 302);
 		}
         $provider_name = $this->request->param('provider');
 		$provider = Provider::factory($provider_name);
@@ -606,7 +607,7 @@ class Useradmin_Controller_User extends Controller_App {
 			return;
 		}
 		Message::add('error', __('provider.not.enabled.select.different.or.login'));
-		$this->request->redirect('user/login');
+		$this->redirect('user/login', 302);
 		return;
 	}
 
@@ -633,7 +634,7 @@ class Useradmin_Controller_User extends Controller_App {
 				else
 				{
 					Message::add('error', __('provider.not.enabled.select.different.or.login'));
-					$this->request->redirect('user/login');
+					$this->redirect('user/login', 302);
 					return;
 				}
 			}
@@ -641,14 +642,14 @@ class Useradmin_Controller_User extends Controller_App {
 				if (isset($_POST['confirmation']))
 				{
 					Message::add('error', __('click.yes.to.associate.account'));
-					$this->request->redirect('user/profile');
+					$this->redirect('user/profile', 302);
 					return;
 				}
 		}
 		else
 		{
 			Message::add('error', 'not.logged.in');
-			$this->request->redirect('user/login');
+			$this->redirect('user/login', 302);
 			return;
 		}
 		$this->template->content = View::factory('user/associate')->set('provider_name', $provider_name);
@@ -688,7 +689,7 @@ class Useradmin_Controller_User extends Controller_App {
 					if (Auth::instance()->logged_in() && Auth::instance()->get_user()->id == $user->id)
 					{
 						// found: "merge" with the existing user
-						$user_identity = ORM::factory('user_identity');
+						$user_identity = ORM::factory('User_identity');
 						$user_identity->user_id = $user->id;
 						$user_identity->provider = $provider_name;
 						$user_identity->identity = $provider->user_id();
@@ -697,13 +698,13 @@ class Useradmin_Controller_User extends Controller_App {
 							Message::add('success', __('user.account.associated.with.provider'));
 							$user_identity->save();
 							// redirect to the user account
-							$this->request->redirect('user/profile');
+							$this->redirect('user/profile', 302);
 							return;
 						}
 						else
 						{
 							Message::add('error', __('unable.to.associate.account.with.provider'));
-							$this->request->redirect('user/login');
+							$this->redirect('user/login', 302);
 							return;
 						}
 					}
@@ -711,7 +712,7 @@ class Useradmin_Controller_User extends Controller_App {
 			}
 		}
 		Message::add('error', __('error.associating.account.with.provider'));
-		$this->request->redirect('user/login');
+		$this->redirect('user/login', 302);
 		return;
 	}
 
@@ -725,7 +726,7 @@ class Useradmin_Controller_User extends Controller_App {
 		if (! is_object($provider))
 		{
 			Message::add('error', __('provider.not.enabled.select.different.or.login'));
-			$this->request->redirect('user/login');
+			$this->redirect('user/login', 302);
 			return;
 		}
 		// verify the request
@@ -733,7 +734,7 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			// check for previously connected user
 			$uid = $provider->user_id();
-			$user_identity = ORM::factory('user_identity')
+			$user_identity = ORM::factory('User_identity')
 				->where('provider', '=', $provider_name)
 				->and_where('identity', '=', $uid)
 				->find();
@@ -745,19 +746,19 @@ class Useradmin_Controller_User extends Controller_App {
 					// found, log user in
 					Auth::instance()->force_login($user);
 					// redirect to the user account
-					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+					$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 					return;
 				}
 			}
 			// If register is disabled, don't create new account
 			if(!Kohana::$config->load('useradmin.register_enabled'))
-				$this->request->redirect('user/login');
+				$this->redirect('user/login', 302);
 			// create new account
 			if (! Auth::instance()->logged_in())
 			{
 
 				/** @var $user Useradmin_Model_User */
-				$user = ORM::factory('user');
+				$user = ORM::factory('User');
 				// fill in values
 				// generate long random password (maximum that passes validation is 42 characters)
 				$password = $user->generate_password(42);
@@ -783,7 +784,7 @@ class Useradmin_Controller_User extends Controller_App {
 					));
 					$user->add('roles', $login_role);
 					// create user identity after we have the user id
-					$user_identity = ORM::factory('user_identity');
+					$user_identity = ORM::factory('User_identity');
 					$user_identity->user_id  = $user->id;
 					$user_identity->provider = $provider_name;
 					$user_identity->identity = $provider->user_id();
@@ -791,7 +792,7 @@ class Useradmin_Controller_User extends Controller_App {
 					// sign the user in
 					Auth::instance()->login($values['username'], $password);
 					// redirect to the user account
-					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
+					$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
 				}
 				catch (ORM_Validation_Exception $e)
 				{
@@ -800,7 +801,7 @@ class Useradmin_Controller_User extends Controller_App {
 					 * try to create another account with a separate provider
 					 */
 					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
-					$this->request->redirect('user/login');
+					$this->redirect('user/login', 302);
 					
 					if ($provider_name == 'twitter')
 					{
@@ -835,13 +836,13 @@ class Useradmin_Controller_User extends Controller_App {
 			else
 			{
 				Message::add('error', __('logged.in.but.account.emails.do.not.match'));
-				$this->request->redirect('user/profile');
+				$this->redirect('user/profile', 302);
 			}
 		}
 		else
 		{
 			Message::add('error', __('retrieving.info.from.provider.failed.register.below'));
-			$this->request->redirect('user/register');
+			$this->redirect('user/register', 302);
 		}
 	}
 

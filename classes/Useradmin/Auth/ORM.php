@@ -28,7 +28,7 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 			$username = $user;
 
 			// Load the user
-			$user = ORM::factory('user');
+			$user = ORM::factory('User');
 			$user->where($user->unique_key($username), '=', $username)->find();
 		}
 		$config = Kohana::$config->load('useradmin.auth');
@@ -79,7 +79,7 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 		if( ! is_object($fields) ) 
 		{
 			// Load the user
-			$user = ORM::factory('user');
+			$user = ORM::factory('User');
 		} 
 		else 
 		{

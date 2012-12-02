@@ -63,7 +63,7 @@ class Useradmin_Controller_App extends Controller {
 	 */
 	public function access_required()
 	{
-		$this->request->redirect('user/noaccess');
+		$this->redirect('user/noaccess', 302);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Useradmin_Controller_App extends Controller {
 	 */
 	public function login_required()
 	{
-        $this->request->redirect('user/login');
+        $this->redirect('user/login', 302);
 	}
 
 	/**

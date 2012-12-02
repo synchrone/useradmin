@@ -3,7 +3,7 @@
 class Useradmin_Model_User_Identity extends ORM {
 
 	protected $_belongs_to = array(
-		'user' => array()
+		'User' => array()
 	);
 
 	/**

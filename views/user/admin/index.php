@@ -39,7 +39,7 @@ foreach ($users as $user) {
    // add provider icons
    if(!empty($providers)) {
       $row['identities'] = '';
-      $identities = $user->user_identity->find_all();
+      $identities = $user->user_identities->find_all();
       if($identities->count() > 0) {
          foreach($identities as $identity) {
             $row['identities'] .= '<img src="/useradmin_assets/img/tiny/'.$identity->provider.'.png"> ';

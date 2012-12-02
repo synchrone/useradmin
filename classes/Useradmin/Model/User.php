@@ -18,7 +18,7 @@ class Useradmin_Model_User extends Model_Auth_User {
 		'user_tokens' => array(),
 
 		// for facebook / twitter / google / yahoo identities
-		'user_identities' => array('model' => 'user_identity'),
+		'user_identities' => array('model' => 'User_Identity'),
 	);
 
 	protected $_has_one= array(
