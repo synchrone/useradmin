@@ -260,7 +260,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// Note how the first param is the path to the message file (e.g. /messages/register.php)
 				$errors = $e->errors('register');
 				// Move external errors to main array, for post helper compatibility
-				$errors = array_merge($errors, ( isset($errors['_external']) ? $errors['_external'] : array() ));
+				$errors = array_merge($errors, ( isset($errors['_external']) ? Arr::flatten($errors['_external']) : array() ));
 				$view->set('errors', $errors);
 				// Pass on the old form values
 				$_POST['password'] = $_POST['password_confirm'] = '';
