@@ -52,49 +52,48 @@ class Useradmin_Controller_User extends Controller_App {
 
     public function before() 
 	{
-		$fullBaseUrl = URL::base(true);
-
-		//was user on our site?
-		if( strpos($this->request->referrer(), $fullBaseUrl) === 0 )
-		  {
-		    //now check that a controller set, it wasn't the user controller, and that the session var "noReturn" is not false
-		  
-		    $uri = parse_url($this->request->referrer(), PHP_URL_PATH);
-			
-		    // correct the path for url_base and index_file, in part taken from Kohana_Request::detect_uri()
-		    // Get the path from the base URL, including the index file
-		    $base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
-		  
-		    if (strpos($uri, $base_url) === 0)
-		      {
-			// Remove the base URL from the URI
-			$uri = (string) substr($uri, strlen($base_url));
-		      }
-		    
-		    if (Kohana::$index_file AND strpos($uri, Kohana::$index_file) === 0)
-		      {
-			// Remove the index file from the URI
-			$uri = (string) substr($uri, strlen(Kohana::$index_file));
-		      }
-		    
-		    $refRequest = new Request($uri, array(), FALSE);
-		    $processedRef = Request::process($refRequest);
-			
-		    $referrerController = Arr::path(
-						    $processedRef,
-						    'params.controller',
-						    false
-						    );
-		    
-		    if($referrerController && $referrerController != 'user' && !Session::instance()->get('noReturn',false)){
-		      Session::instance()->set('returnUrl',$this->request->referrer());
-		    }
-
-        }
-
-        parent::before();
-        
-    }
+	  $fullBaseUrl = URL::base(true);
+	  
+	  //was user on our site?
+	  if( strpos($this->request->referrer(), $fullBaseUrl) === 0 )
+	    {
+	      //now check that a controller set, it wasn't the user controller, and that the session var "noReturn" is not false
+	      
+	      $uri = parse_url($this->request->referrer(), PHP_URL_PATH);
+	      
+	      // correct the path for url_base and index_file, in part taken from Kohana_Request::detect_uri()
+	      // Get the path from the base URL, including the index file
+	      $base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
+	      
+	      if (strpos($uri, $base_url) === 0)
+		{
+		  // Remove the base URL from the URI
+		  $uri = (string) substr($uri, strlen($base_url));
+		}
+	      
+	      if (Kohana::$index_file AND strpos($uri, Kohana::$index_file) === 0)
+		{
+		  // Remove the index file from the URI
+		  $uri = (string) substr($uri, strlen(Kohana::$index_file));
+		}
+	      
+	      $refRequest = new Request($uri, array(), FALSE);
+	      $processedRef = Request::process($refRequest);
+	      
+	      $referrerController = Arr::path(
+					      $processedRef,
+					      'params.controller',
+					      false
+					      );
+	      
+	      if($referrerController && $referrerController != 'User' && !Session::instance()->get('noReturn',false)){
+		Session::instance()->set('returnUrl',$this->request->referrer());
+	      }
+	      
+	    }
+	  
+	  parent::before();        
+	}
 
 	// USER SELF-MANAGEMENT
 	/**
@@ -145,58 +144,58 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	public function action_profile_edit()
 	{
-		// set the template title (see Controller_App for implementation)
-		$this->template->title = __('edit.profile');
-		$user = Auth::instance()->get_user();
-		$id = $user->id;
-		// load the content from view
-		$view = View::factory('user/profile_edit');
-		// save the data
-		if (! empty($_POST) && is_numeric($id))
+	  // set the template title (see Controller_App for implementation)
+	  $this->template->title = __('edit.profile');
+	  $user = Auth::instance()->get_user();
+	  $id = $user->id;
+	  // load the content from view
+	  $view = View::factory('user/profile_edit');
+	  // save the data
+	  if (! empty($_POST) && is_numeric($id))
+	    {
+	      if (empty($_POST['password']) || empty($_POST['password_confirm']))
 		{
-			if (empty($_POST['password']) || empty($_POST['password_confirm']))
-			{
-				// force unsetting the password! Otherwise Kohana3 will automatically hash the empty string - preventing logins
-				unset($_POST['password'], $_POST['password_confirm']);
-			}
-			try
-			{
-				$user->update_user($_POST, $this->user_model_fields);
-				// message: save success
-				Message::add('success', __('values.saved').'.');
-				// redirect and exit
-				$this->redirect('user/profile', 302);
-				return;
-			}
-			catch (ORM_Validation_Exception $e)
-			{
-				// Get errors for display in view
-				// Note how the first param is the path to the message file (e.g. /messages/register.php)
-				Message::add('error', __('error.values.could.not.be.saved'));
-				$errors = $e->errors('register');
-				$errors = array_merge($errors, ( isset($errors['_external']) ? $errors['_external'] : array() ));
-				$view->set('errors', $errors);
-				// Pass on the old form values
-				$user->password = '';
-				$view->set('data', $user->as_array());
-			}
+		  // force unsetting the password! Otherwise Kohana3 will automatically hash the empty string - preventing logins
+		  unset($_POST['password'], $_POST['password_confirm']);
 		}
-		else
+	      try
 		{
-			// load the information for viewing
-			$view->set('data', $user->as_array());
+		  $user->update_user($_POST, $this->user_model_fields);
+		  // message: save success
+		  Message::add('success', __('values.saved').'.');
+		  // redirect and exit
+		  $this->redirect('user/profile', 302);
+		  return;
 		}
-		// retrieve roles into array
-		$roles = array();
-		foreach ($user->roles->find_all() as $role)
+	      catch (ORM_Validation_Exception $e)
 		{
-			$roles[$role->name] = $role->description;
+		  // Get errors for display in view
+		  // Note how the first param is the path to the message file (e.g. /messages/register.php)
+		  Message::add('error', __('error.values.could.not.be.saved'));
+		  $errors = $e->errors('register');
+		  $errors = array_merge($errors, ( isset($errors['_external']) ? Arr::flatten($errors['_external']) : array() ));
+		  $view->set('errors', $errors);
+		  // Pass on the old form values
+		  $user->password = '';
+		  $view->set('data', $user->as_array());
 		}
-		$view->set('user_roles', $roles);
-		$view->set('id', $id);
-		$this->template->content = $view;
+	    }
+	  else
+	    {
+	      // load the information for viewing
+	      $view->set('data', $user->as_array());
+	    }
+	  // retrieve roles into array
+	  $roles = array();
+	  foreach ($user->roles->find_all() as $role)
+	    {
+	      $roles[$role->name] = $role->description;
+	    }
+	  $view->set('user_roles', $roles);
+	  $view->set('id', $id);
+	  $this->template->content = $view;
 	}
-
+	
 	/**
 	 * Register a new user.
 	 */
@@ -326,80 +325,83 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	public function action_login()
 	{
-		// ajax login
-		if ($this->request->is_ajax() && isset($_REQUEST['username'], $_REQUEST['password']))
+	  // ajax login
+	  if ($this->request->is_ajax() && isset($_REQUEST['username'], $_REQUEST['password']))
+	    {
+	      $this->auto_render = false;
+	      $this->request->headers('Content-Type', 'application/json');
+	      
+	      if ( Auth::instance()->logged_in() != 0 )
 		{
-			$this->auto_render = false;
-			$this->request->headers('Content-Type', 'application/json');
-
-			if ( Auth::instance()->logged_in() != 0 )
-			{
-				$this->response->status(200);
-				$this->template->content = $this->request->body('{ "success": "true" }');
-				return;
-			}
-			else {
-				if (Auth::instance()->login($_REQUEST['username'],$_REQUEST['password'],
-                                            Arr::get($_REQUEST,'remember',false)!=false)
-                ){
-					$this->response->status(200);
-					$this->template->content = $this->request->body('{ "success": "true" }');
-					return;
-				}
-            }
-
-			$this->response->status(500);
-			$this->template->content = $this->request->body('{ "success": "false" }');
-			return;
+		  $this->response->status(200);
+		  $this->template->content = $this->request->body('{ "success": "true" }');
+		  return;
 		}
-		else
+	      else 
 		{
-			// set the template title (see Controller_App for implementation)
-			$this->template->title = __('login');
-			
-			// If user already signed-in
-			if (Auth::instance()->logged_in() != 0)
-			{
-				// redirect to the user account
-				$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
-			}
-			
-			$view = View::factory('user/login');
-			
-			// If there is a post and $_POST is not empty
-			if ($_REQUEST && isset($_REQUEST['username'], $_REQUEST['password']))
-			{
-				// Check Auth if the post data validates using the rules setup in the user model
-				if (Auth::instance()->login($_REQUEST['username'], $_REQUEST['password'],
-                                            Arr::get($_REQUEST,'remember',false)!=false)
-                ){
-					// redirect to the user account
-					$this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
-					return;
-				}
-				else
-				{
-					$view->set('username', $_REQUEST['username']);
-					// Get errors for display in view
-					$validation = Validation::factory($_REQUEST)
-						->rule('username', 'not_empty')
-						->rule('password', 'not_empty');
-					if ($validation->check())
-					{
-						$validation->error('password', 'invalid');
-					}
-					$view->set('errors', $validation->errors('login'));
-				}
-			}
-			
-			// allow setting the username as a get param
-			if (isset($_GET['username']))
-			{
-				$view->set('username', htmlspecialchars($_GET['username']));
-			}
-            $view->set('providers',Kohana::$config->load('useradmin.providers'));
-			$this->template->content = $view;
+		  if (Auth::instance()->login($_REQUEST['username'],$_REQUEST['password'],
+					      Arr::get($_REQUEST,'remember',false)!=false)
+		      )
+		    {
+		      $this->response->status(200);
+		      $this->template->content = $this->request->body('{ "success": "true" }');
+		      return;
+		    }
 		}
+	      
+	      $this->response->status(500);
+	      $this->template->content = $this->request->body('{ "success": "false" }');
+	      return;
+	    }
+	  else
+	    {
+	      // set the template title (see Controller_App for implementation)
+	      $this->template->title = __('login');
+	      
+	      // If user already signed-in
+	      if (Auth::instance()->logged_in() != 0)
+		{
+		  // redirect to the user account
+		  $this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
+		}
+	      
+	      $view = View::factory('user/login');
+	      
+	      // If there is a post and $_POST is not empty
+	      if ($_REQUEST && isset($_REQUEST['username'], $_REQUEST['password']))
+		{
+		  // Check Auth if the post data validates using the rules setup in the user model
+		  if (Auth::instance()->login($_REQUEST['username'], $_REQUEST['password'],
+					      Arr::get($_REQUEST,'remember',false)!=false)
+		      )
+		    {
+		      // redirect to the user account
+		      $this->redirect(Session::instance()->get_once('returnUrl','user/profile'), 302);
+		      return;
+		    }
+		  else
+		    {
+		      $view->set('username', $_REQUEST['username']);
+		      // Get errors for display in view
+		      $validation = Validation::factory($_REQUEST)
+			->rule('username', 'not_empty')
+			->rule('password', 'not_empty');
+		      if ($validation->check())
+			{
+			  $validation->error('password', 'invalid');
+			}
+		      $view->set('errors', $validation->errors('login'));
+		    }
+		}
+	      
+	      // allow setting the username as a get param
+	      if (isset($_GET['username']))
+		{
+		  $view->set('username', htmlspecialchars($_GET['username']));
+		}
+	      $view->set('providers',Kohana::$config->load('useradmin.providers'));
+	      $this->template->content = $view;
+	    }
 	}
 
 	/**
