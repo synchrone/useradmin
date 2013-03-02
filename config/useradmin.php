@@ -7,7 +7,7 @@ return array(
      * If the user mistypes their password X times, then they will not be permitted to log in during the jail time.
      * This helps prevent brute-force attacks.
      */
-   'auth' => array(
+    'auth' => array(
 
       /**
        * Define the maximum failed attempts to login
@@ -116,4 +116,4 @@ return array(
      * - You must set the private and public key in /config/recaptcha.php from https://www.google.com/recaptcha/admin/create
      */
     'captcha' => false,
-    );
+);
