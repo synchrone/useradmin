@@ -196,6 +196,37 @@ class Useradmin_Controller_User extends Controller_App {
 		$this->template->content = $view;
 	}
 
+    protected function registration_optional_checks(View $view)
+    {
+        $optional_checks = true;
+
+        // if configured to use captcha, check the reCaptcha result
+        if ($recaptcha_config = Kohana::$config->load('useradmin')->captcha)
+        {
+            $view->set('captcha_enabled', true);
+            $recaptcha_resp = recaptcha_check_answer(
+                $recaptcha_config['privatekey'],
+                $_SERVER['REMOTE_ADDR'],
+                $_POST['recaptcha_challenge_field'],
+                $_POST['recaptcha_response_field']
+            );
+            if (! $recaptcha_resp->is_valid)
+            {
+                $optional_checks = false;
+
+                $view->set('recaptcha_html',
+                    recaptcha_get_html(
+                        $recaptcha_config['publickey'],
+                        $recaptcha_resp->error
+                    )
+                );
+
+                Message::add('error', __('captcha.incorrect').'. '.__('please.try.again').'.');
+            }
+        }
+        return $optional_checks;
+    }
+
 	/**
 	 * Register a new user.
 	 */
@@ -223,27 +254,10 @@ class Useradmin_Controller_User extends Controller_App {
 		// If there is a post and $_POST is not empty
 		if ($_POST)
 		{
-			// optional checks (e.g. reCaptcha or some other additional check)
-			$optional_checks = true;
-			// if configured to use captcha, check the reCaptcha result
-			if ($recaptcha_config = Kohana::$config->load('useradmin')->captcha)
-			{
-				$recaptcha_resp = recaptcha_check_answer(
-					$recaptcha_config['privatekey'], 
-					$_SERVER['REMOTE_ADDR'], 
-					$_POST['recaptcha_challenge_field'], 
-					$_POST['recaptcha_response_field']
-				);
-				if (! $recaptcha_resp->is_valid)
-				{
-					$optional_checks = false;
-					$recaptcha_error = $recaptcha_resp->error;
-					Message::add('error', __('captcha.incorrect').'. '.__('please.try.again').'.');
-				}
-			}
 			try
 			{
-				if (! $optional_checks)
+                // optional checks (e.g. reCaptcha or some other additional check)
+				if (! $this->registration_optional_checks($view))
 				{
 					throw new ORM_Validation_Exception("Invalid option checks");
 				}
@@ -266,11 +280,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$view->set('defaults', $_POST);
 			}
 		}
-		if (Kohana::$config->load('useradmin')->captcha)
-		{
-			$view->set('captcha_enabled', true);
-			$view->set('recaptcha_html', recaptcha_get_html($recaptcha_config['publickey'], $recaptcha_error));
-		}
+
 		$this->template->content = $view;
 	}
 
