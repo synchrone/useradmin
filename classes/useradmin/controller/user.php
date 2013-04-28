@@ -177,13 +177,13 @@ class Useradmin_Controller_User extends Controller_App {
 				$view->set('errors', $errors);
 				// Pass on the old form values
 				$user->password = '';
-				$view->set('data', $user->as_array());
+				$view->set('data', $user);
 			}
 		}
 		else
 		{
 			// load the information for viewing
-			$view->set('data', $user->as_array());
+			$view->set('data', $user);
 		}
 		// retrieve roles into array
 		$roles = array();
@@ -630,8 +630,9 @@ class Useradmin_Controller_User extends Controller_App {
 		}
 		if (Auth::instance()->logged_in())
 		{
-			if (isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
+			if ($this->request->post('confirmation') == 'Y')
 			{
+                /** @var Provider $provider */
 				$provider = Provider::factory($provider_name);
 				if (is_object($provider))
 				{

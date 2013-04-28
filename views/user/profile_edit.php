@@ -4,8 +4,8 @@ if(isset($errors)) {
    $form->errors = $errors;
 }
 if(isset($data)) {
-   unset($data['password']);
-   $form->values = $data;
+   unset($data->password);
+   $form->values = $data->as_array();
 }
 echo $form->open('user/profile_edit');
 ?>
