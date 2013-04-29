@@ -856,6 +856,25 @@ class Useradmin_Controller_User extends Controller_App {
 		}
 	}
 
+    function action_provider_disconnect($redirect_url = 'user/profile') //Note: this is for child override
+    {
+        /**
+         * @var Model_User $user
+         */
+        if(!($user = Auth::instance()->get_user()))
+        {
+            $this->request->redirect('user/login');
+        }
+        if($provider_name = $this->request->param('provider'))
+        {
+            $identity = ORM::factory('User_Identity', array('provider'=>$provider_name,'user_id'=>$user->id));
+            if($identity->loaded()){
+                $identity->delete();
+            }
+        }
+        $this->request->redirect($redirect_url);
+    }
+
 	/**
 	 * Media routing code. Allows lazy users to load images via Kohana. See also: init.php.
 	 * I recommend just serving the files via apache, e.g. copy the public directory to your webroot.
