@@ -816,11 +816,11 @@ class Useradmin_Controller_User extends Controller_App {
 					
 					if ($provider_name == 'twitter')
 					{
-						Message::add('error', __('twitter.no.email.retrive.support'));
+						Message::add('error', __('no.email.retrive.support'));
 					}
 					else
 					{
-						Message::add('error', 'please.complete.data.from.other.account');
+						Message::add('error', __('please.complete.data.from.other.account'));
 					}
 					// in case the data for some reason fails, the user will still see something sensible:
 					// the normal registration form.

@@ -161,8 +161,8 @@ return array(
 	    Возможно, аккаунт на этом сервисе уже был ассоциирован с другой учетной записью, в то время как мы можем разрешить только одну такую связь.
 	', // 696
 	'error.associating.account.with.provider' => 'Произошла ошибка при ассоциации сервиса с вашей учетной записью', // 704
-	'twitter.no.email.retrive.support' => 'Мы не смогли получить ваш Email из twitter. Пожалуйста, введите его вручную ', // 790
-	'logged.in.but.account.emails.do.not.match' => 'Email, который мы получили от сервиса авторизации не совпадает с тем, что указан здесь.', // 820
+	'no.email.retrive.support' => 'Мы не смогли получить ваш Email. Пожалуйста, зарегистрируйтесь через форму ниже или выберите другого провайдера', // 790
+	'logged.in.but.account.emails.do.not.match' => 'Email, который мы получили от сервиса авторизации не совпадает с тем, что указан у нас.', // 820
 	'retrieving.info.from.provider.failed.register.below' => 'Мы не смогли получить информацию от сервиса авторизации. Пожалуйста, войдите на сайт, используя форму ниже', // 826
 
 	// \classes\useradmin\controller\admin\user.php
@@ -174,5 +174,6 @@ return array(
     'password.not_empty' => 'Вы забыли ввести пароль',
     'username.invalid' => 'Пользователя с таким именем у нас нет',
     'username.not_empty' => 'Вы забыли ввести имя пользователя или e-mail',
+    'matching.account.exists.for.provider' => 'С этим провайдером уже ассоциирована учетная запись'
 	// Orphan phrases
 );
