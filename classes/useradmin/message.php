@@ -7,7 +7,11 @@ class Useradmin_Message {
      */
     public static $messages_session_key = 'useradmin_messages';
 
-	public static function add($type, $message)
+    /**
+     * @param string $type success or error
+     * @param $message
+     */
+    public static function add($type, $message)
 	{
 		// get session messages
 		$messages = Session::instance()->get(self::$messages_session_key);
@@ -40,11 +44,16 @@ class Useradmin_Message {
 			{
 				foreach ($messages as $message)
 				{
-					$str .= '<div class="' . $type . '">' . $message . '</div>';
+					$str .= Message::render_message($type,$message);
 				}
 			}
 		}
 
 		return $str;
 	}
+
+    protected static function render_message($type,$message)
+    {
+        return '<div class="' . $type . '">' . $message . '</div>';
+    }
 }
