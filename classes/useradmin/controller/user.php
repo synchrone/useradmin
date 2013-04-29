@@ -241,7 +241,8 @@ class Useradmin_Controller_User extends Controller_App {
 			include Kohana::find_file('vendor', 'recaptcha/recaptchalib');
 			$recaptcha_config = Kohana::$config->load('recaptcha');
 			$recaptcha_error = null;
-            $recaptcha = recaptcha_get_html($recaptcha_config->publickey, $recaptcha_error);
+//            get recaptcha html code as follows:
+//            $recaptcha = recaptcha_get_html($recaptcha_config->publickey, $recaptcha_error);
 		}
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('user.registration');
@@ -258,10 +259,12 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			try
 			{
+                /** @var $auth Useradmin_Auth_ORM */
+                $auth = Auth::instance();
                 $this->registration_optional_checks($view);
-//				Auth::instance()->register($_POST, TRUE);
+                $auth->register($_POST, TRUE);
 				// sign the user in
-				Auth::instance()->login($_POST['username'], $_POST['password']);
+                $auth->login($_POST['username'], $_POST['password']);
 				// redirect to the user account
 				$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 			}
@@ -278,7 +281,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$view->set('defaults', $_POST);
 			}
 		}
-$view->set('captcha', $recaptcha);
+
 		$this->template->content = $view;
 	}
 
