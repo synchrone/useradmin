@@ -470,7 +470,7 @@ $view->set('captcha', $recaptcha);
 				}
 				else
 				{
-					Message::add('failure', __('could.not.send.email').'.');
+					Message::add('error', __('could.not.send.email').'.');
 				}
 			}
 			else
@@ -514,7 +514,7 @@ $view->set('captcha', $recaptcha);
 				// The admin password cannot be reset by email
 				if ($user->has('roles',ORM::factory('role',array('name'=>'admin'))))
 				{
-					Message::add('failure', __('no.admin.account.email.password.reset'));
+					Message::add('error', __('no.admin.account.email.password.reset'));
 				}
 				else
                 {
@@ -730,6 +730,7 @@ $view->set('captcha', $recaptcha);
 	function action_provider_return()
 	{
 		$provider_name = $this->request->param('provider');
+        /** @var Provider $provider */
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -752,7 +753,9 @@ $view->set('captcha', $recaptcha);
 				if ($user->loaded() && $user->id == $user_identity->user_id && is_numeric($user->id))
 				{
 					// found, log user in
-					Auth::instance()->force_login($user);
+                    /** @var Auth_ORM $auth */
+                    $auth = Auth::instance();
+					$auth->force_login($user);
 					// redirect to the user account
 					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 					return;
@@ -772,9 +775,7 @@ $view->set('captcha', $recaptcha);
 				$password = $user->generate_password(42);
 				$values = array(
 					// get a unused username like firstname.surname or firstname.surname2 ...
-					'username' => $user->generate_username(
-						str_replace(' ', '.', $provider->name())
-					), 
+					'username' => $user->generate_username($provider->name()),
 					'password' => $password, 
 					'password_confirm' => $password
 				);
@@ -803,21 +804,24 @@ $view->set('captcha', $recaptcha);
 					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 				}
 				catch (ORM_Validation_Exception $e)
-				{
-					/*
-					 * Redirect back to the front page in case they
-					 * try to create another account with a separate provider
-					 */
-					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
-					$this->request->redirect('user/login');
-					
-					if ($provider_name == 'twitter')
+				{//since we checked on username and password that only leaves us with duplicate or empty email
+
+                    if(key($e->errors()) == 'email' && current(key($e->errors())) == 'unique'){
+                        /*
+                         * Redirect back to the front page in case they
+                         * try to create another account with a separate provider
+                         */
+                        Message::add('error', __('matching.account.exists.for.provider'));
+                        $this->request->redirect('user/login');
+                    }
+
+					if ($provider->email() === null)
 					{
-						Message::add('error', __('twitter.no.email.retrive.support'));
+						Message::add('error', __('no.email.retrive.support'));
 					}
 					else
 					{
-						Message::add('error', 'please.complete.data.from.other.account');
+						Message::add('error', __('please.complete.data.from.other.account'));
 					}
 					// in case the data for some reason fails, the user will still see something sensible:
 					// the normal registration form.
@@ -853,6 +857,25 @@ $view->set('captcha', $recaptcha);
 			$this->request->redirect('user/register');
 		}
 	}
+
+    function action_provider_disconnect($redirect_url = 'user/profile') //Note: this is for child override
+    {
+        /**
+         * @var Model_User $user
+         */
+        if(!($user = Auth::instance()->get_user()))
+        {
+            $this->request->redirect('user/login');
+        }
+        if($provider_name = $this->request->param('provider'))
+        {
+            $identity = ORM::factory('User_Identity', array('provider'=>$provider_name,'user_id'=>$user->id));
+            if($identity->loaded()){
+                $identity->delete();
+            }
+        }
+        $this->request->redirect($redirect_url);
+    }
 
 	/**
 	 * Media routing code. Allows lazy users to load images via Kohana. See also: init.php.

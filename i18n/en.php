@@ -158,7 +158,7 @@ Your user account name is: :username
                             Please make sure that there are no other accounts using this provider identity,
                             as each 3rd party provider identity can only be associated with one user account.', // 696
 	'error.associating.account.with.provider' => 'There was an error associating your account with this provider.', // 704
-	'twitter.no.email.retrive.support' => 'The Twitter API does not support retrieving your email address; you will have to enter it manually.', // 790
+	'no.email.retrive.support' => 'This provider does not support retrieving your email address; Please register using a form below, or use another auth provider.', // 790
 	'logged.in.but.account.emails.do.not.match' => 'You are logged in, but the email received from the provider does not match the email associated with your account.', // 820
 	'retrieving.info.from.provider.failed.register.below' => 'Retrieving information from the provider failed. Please register below.', // 826
 
@@ -171,5 +171,8 @@ Your user account name is: :username
     'password.not_empty' => 'Password must not be empty.',
     'username.invalid' => 'Password or username is incorrect.',
     'username.not_empty' => 'Username must not be empty.',
+    'matching.account.exists.for.provider' => 'A matching account already exists with another provider. Please select another login or registration method.',
+
+    'please.complete.data.from.other.account' => 'Please complete user data to register'
 	// Orphan phrases
 );

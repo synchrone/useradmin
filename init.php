@@ -2,7 +2,7 @@
 
 Route::set('user/default', 'user(/<action>(/<provider>))',
 	array(
-		'action' => '(provider|provider_return|associate|associate_return)',
+		'action' => '(provider|provider_return|associate|associate_return|provider_disconnect)',
 		'provider' => '.+',
 	))
 	->defaults(array(

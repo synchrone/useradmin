@@ -40,16 +40,42 @@ class Useradmin_Model_User extends Model_Auth_User {
 	public function rules()
 	{
 		$parent = parent::rules();
-		// fixes the min_length username value
+		// fixes the max_length into min_length username value
 		$parent['username'][1] = array('min_length', array(':value', 1));
 
-        $require_email = Kohana::$config->load('useradmin.require_email');
-        if($require_email === false){
-            unset($parent['email']);
+        $require_email = Kohana::$config->load('useradmin.remote_auth_require_email');
+
+        if($require_email === false && self::is_fast_registration()){
+            unset($parent['email'][0]);
+            unset($parent['email'][1]);
         }
+
 		return $parent;
 	}
-	
+
+    public function unique($field, $value)
+    {
+        $require_email = Kohana::$config->load('useradmin.remote_auth_require_email');
+
+        if(self::is_fast_registration() && $field =='email' &&
+            $value === null && $require_email === false
+        ){
+            return true; //consider email unique during social registration
+        }
+        return parent::unique($field,$value);
+    }
+
+    /**
+     * Determines if we're in social registration mode
+     * @return bool
+     */
+    public static function is_fast_registration()
+    {
+        $req = Request::current();
+        return $req->controller() == 'user' &&
+            $req->action() == 'provider_return';
+    }
+
 	// TODO overload filters() and add username/created_on/updated_on coluns filters
 
 	/**
@@ -72,7 +98,7 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 * @param int $length
 	 * @return string
 	 */
-	function generate_password($length = 8) 
+	public function generate_password($length = 8)
 	{
 		// start with a blank password
 		$password = "";
@@ -94,8 +120,9 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 * @param string $string
 	 * @return string
 	 */
-	function transcribe($string) 
+	protected function transcribe($string)
 	{
+        $string = str_replace(' ', '.',$string);
         $string = strtr($string, array (
             'А' => 'A',
             'Б' => 'B',
@@ -180,7 +207,7 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 *
 	 * @param string $base
 	 */
-	function generate_username($base = '') 
+	public function generate_username($base = '')
 	{
 		$base = $this->transcribe($base);
 		$username = $base;
