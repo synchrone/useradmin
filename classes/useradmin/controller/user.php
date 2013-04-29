@@ -806,15 +806,18 @@ class Useradmin_Controller_User extends Controller_App {
 					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 				}
 				catch (ORM_Validation_Exception $e)
-				{
-					/*
-					 * Redirect back to the front page in case they
-					 * try to create another account with a separate provider
-					 */
-					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
-					$this->request->redirect('user/login');
-					
-					if ($provider_name == 'twitter')
+				{//since we checked on username and password that only leaves us with duplicate or empty email
+
+                    if(key($e->errors()) == 'email' && current(key($e->errors())) == 'unique'){
+                        /*
+                         * Redirect back to the front page in case they
+                         * try to create another account with a separate provider
+                         */
+                        Message::add('error', __('matching.account.exists.for.provider'));
+                        $this->request->redirect('user/login');
+                    }
+
+					if ($provider->email() === null)
 					{
 						Message::add('error', __('no.email.retrive.support'));
 					}

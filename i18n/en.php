@@ -172,5 +172,7 @@ Your user account name is: :username
     'username.invalid' => 'Password or username is incorrect.',
     'username.not_empty' => 'Username must not be empty.',
     'matching.account.exists.for.provider' => 'A matching account already exists with another provider. Please select another login or registration method.',
+
+    'please.complete.data.from.other.account' => 'Please complete user data to register'
 	// Orphan phrases
 );

@@ -174,6 +174,7 @@ return array(
     'password.not_empty' => 'Вы забыли ввести пароль',
     'username.invalid' => 'Пользователя с таким именем у нас нет',
     'username.not_empty' => 'Вы забыли ввести имя пользователя или e-mail',
-    'matching.account.exists.for.provider' => 'С этим провайдером уже ассоциирована учетная запись'
+    'matching.account.exists.for.provider' => 'С этим провайдером уже ассоциирована учетная запись',
+    'please.complete.data.from.other.account' => 'Пожалуйста, заполните форму для продолжения регистрации'
 	// Orphan phrases
 );
