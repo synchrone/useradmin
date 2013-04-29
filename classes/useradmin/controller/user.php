@@ -198,11 +198,10 @@ class Useradmin_Controller_User extends Controller_App {
 
     protected function registration_optional_checks(View $view)
     {
-        $optional_checks = true;
-
         // if configured to use captcha, check the reCaptcha result
-        if ($recaptcha_config = Kohana::$config->load('useradmin')->captcha)
+        if (Kohana::$config->load('useradmin')->captcha)
         {
+            $recaptcha_config = Kohana::$config->load('recaptcha');
             $view->set('captcha_enabled', true);
             $recaptcha_resp = recaptcha_check_answer(
                 $recaptcha_config['privatekey'],
@@ -210,10 +209,13 @@ class Useradmin_Controller_User extends Controller_App {
                 $_POST['recaptcha_challenge_field'],
                 $_POST['recaptcha_response_field']
             );
-            if (! $recaptcha_resp->is_valid)
-            {
-                $optional_checks = false;
 
+            /** @var $captcha_validation Validation */
+            $captcha_validation = Validation::factory((array) $recaptcha_resp)
+                ->rule('is_valid','not_empty')
+                ->rule('is_valid','equals',array(':value',true));
+            if (! $captcha_validation->check())
+            {
                 $view->set('recaptcha_html',
                     recaptcha_get_html(
                         $recaptcha_config['publickey'],
@@ -221,10 +223,9 @@ class Useradmin_Controller_User extends Controller_App {
                     )
                 );
 
-                Message::add('error', __('captcha.incorrect').'. '.__('please.try.again').'.');
+                throw new ORM_Validation_Exception('register', $captcha_validation, __('captcha.incorrect').'. '.__('please.try.again').'.');
             }
         }
-        return $optional_checks;
     }
 
 	/**
@@ -240,6 +241,7 @@ class Useradmin_Controller_User extends Controller_App {
 			include Kohana::find_file('vendor', 'recaptcha/recaptchalib');
 			$recaptcha_config = Kohana::$config->load('recaptcha');
 			$recaptcha_error = null;
+            $recaptcha = recaptcha_get_html($recaptcha_config->publickey, $recaptcha_error);
 		}
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('user.registration');
@@ -256,12 +258,8 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			try
 			{
-                // optional checks (e.g. reCaptcha or some other additional check)
-				if (! $this->registration_optional_checks($view))
-				{
-					throw new ORM_Validation_Exception("Invalid option checks");
-				}
-				Auth::instance()->register($_POST, TRUE);
+                $this->registration_optional_checks($view);
+//				Auth::instance()->register($_POST, TRUE);
 				// sign the user in
 				Auth::instance()->login($_POST['username'], $_POST['password']);
 				// redirect to the user account
@@ -280,7 +278,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$view->set('defaults', $_POST);
 			}
 		}
-
+$view->set('captcha', $recaptcha);
 		$this->template->content = $view;
 	}
 
