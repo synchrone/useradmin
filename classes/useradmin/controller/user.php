@@ -472,7 +472,7 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 				else
 				{
-					Message::add('failure', __('could.not.send.email').'.');
+					Message::add('error', __('could.not.send.email').'.');
 				}
 			}
 			else
@@ -516,7 +516,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// The admin password cannot be reset by email
 				if ($user->has('roles',ORM::factory('role',array('name'=>'admin'))))
 				{
-					Message::add('failure', __('no.admin.account.email.password.reset'));
+					Message::add('error', __('no.admin.account.email.password.reset'));
 				}
 				else
                 {
@@ -732,6 +732,7 @@ class Useradmin_Controller_User extends Controller_App {
 	function action_provider_return()
 	{
 		$provider_name = $this->request->param('provider');
+        /** @var Provider $provider */
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -754,7 +755,9 @@ class Useradmin_Controller_User extends Controller_App {
 				if ($user->loaded() && $user->id == $user_identity->user_id && is_numeric($user->id))
 				{
 					// found, log user in
-					Auth::instance()->force_login($user);
+                    /** @var Auth_ORM $auth */
+                    $auth = Auth::instance();
+					$auth->force_login($user);
 					// redirect to the user account
 					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 					return;
@@ -774,9 +777,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$password = $user->generate_password(42);
 				$values = array(
 					// get a unused username like firstname.surname or firstname.surname2 ...
-					'username' => $user->generate_username(
-						str_replace(' ', '.', $provider->name())
-					), 
+					'username' => $user->generate_username($provider->name()),
 					'password' => $password, 
 					'password_confirm' => $password
 				);

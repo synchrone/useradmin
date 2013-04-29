@@ -72,7 +72,7 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 * @param int $length
 	 * @return string
 	 */
-	function generate_password($length = 8) 
+	public function generate_password($length = 8)
 	{
 		// start with a blank password
 		$password = "";
@@ -94,8 +94,9 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 * @param string $string
 	 * @return string
 	 */
-	function transcribe($string) 
+	protected function transcribe($string)
 	{
+        $string = str_replace(' ', '.',$string);
         $string = strtr($string, array (
             'А' => 'A',
             'Б' => 'B',
@@ -180,7 +181,7 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 *
 	 * @param string $base
 	 */
-	function generate_username($base = '') 
+	public function generate_username($base = '')
 	{
 		$base = $this->transcribe($base);
 		$username = $base;
