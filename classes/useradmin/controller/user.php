@@ -789,7 +789,7 @@ class Useradmin_Controller_User extends Controller_App {
 		else
 		{
 			Message::add('error', __('retrieving.info.from.provider.failed.register.below'));
-			$this->request->redirect('user/register');
+			$this->request->redirect('user/login');
 		}
 	}
 
