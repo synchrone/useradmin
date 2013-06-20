@@ -263,9 +263,17 @@ class Useradmin_Controller_User extends Controller_App {
                 /** @var $auth Useradmin_Auth_ORM */
                 $auth = Auth::instance();
                 $this->registration_optional_checks($view);
-                $auth->register($_POST, TRUE);
+                $new_user = $auth->register($_POST, TRUE);
+
+                if($provider_info = Session::instance()->get_once('registration_provider_data')){
+                    ORM::factory('User_Identity')
+                        ->values(array('user_id' => $new_user->id)+ $provider_info)
+                        ->save();
+                }
+
 				// sign the user in
-                $auth->login($_POST['username'], $_POST['password']);
+                $auth->force_login($new_user);
+
 				// redirect to the user account
 				$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
 			}
@@ -597,7 +605,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 * Redirect to the provider's auth URL
 	 * @param string $provider
 	 */
-	function action_provider ()
+	function action_provider()
 	{
 		if (Auth::instance()->logged_in())
 		{
@@ -735,9 +743,9 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider_return()
 	{
-		$provider_name = $this->request->param('provider');
+		$provider_type = $this->request->param('provider');
         /** @var Provider $provider */
-		$provider = Provider::factory($provider_name);
+		$provider = Provider::factory($provider_type);
 		if (! is_object($provider))
 		{
 			Message::add('error', __('provider.not.enabled.select.different.or.login'));
@@ -747,16 +755,22 @@ class Useradmin_Controller_User extends Controller_App {
 		// verify the request
 		if ($provider->verify())
 		{
+            $provider_info = array(
+                'provider' => $provider_type,
+                'identity' => $provider->user_id(),
+                'email' => $provider->email(),
+                'name' => $provider->name()
+            );
+
 			// check for previously connected user
-			$uid = $provider->user_id();
 			$user_identity = ORM::factory('user_identity')
-				->where('provider', '=', $provider_name)
-				->and_where('identity', '=', $uid)
+				->where('provider', '=', $provider_info['provider'])
+				->and_where('identity', '=', $provider_info['identity'])
 				->find();
 			if ($user_identity->loaded())
 			{
 				$user = $user_identity->user;
-				if ($user->loaded() && $user->id == $user_identity->user_id && is_numeric($user->id))
+				if ($user->loaded())
 				{
 					// found, log user in
                     /** @var Auth_ORM $auth */
@@ -767,132 +781,14 @@ class Useradmin_Controller_User extends Controller_App {
 					return;
 				}
 			}
+
 			// If register is disabled, don't create new account
-			if(!Kohana::$config->load('useradmin.register_enabled'))
+			if(!Kohana::$config->load('useradmin.register_enabled')){
 				$this->request->redirect('user/login');
-			// create new account
-			if (! Auth::instance()->logged_in())
-			{
+            }
 
-				/** @var $user Useradmin_Model_User */
-				$user = ORM::factory('user');
-				// fill in values
-				// generate long random password (maximum that passes validation is 42 characters)
-				$password = $user->generate_password(42);
-				$values = array(
-					// get a unused username like firstname.surname or firstname.surname2 ...
-					'username' => $user->generate_username($provider->name()),
-					'password' => $password, 
-					'password_confirm' => $password
-				);
-				if (Valid::email($provider->email(), TRUE))
-				{
-					$values['email'] = $provider->email();
-				}
-				try
-				{
-					// If the post data validates using the rules setup in the user model
-					$user->create_user($values, $this->user_model_fields);
-					// Add the login role to the user (add a row to the db)
-					$login_role = new Model_Role(array(
-						'name' => 'login'
-					));
-					$user->add('roles', $login_role);
-
-					// create user identity after we have the user id
-					ORM::factory('user_identity')
-                        ->values(array(
-                            'user_id'  => $user->id,
-                            'provider' => $provider_name,
-                            'identity' => $provider->user_id(),
-                        ))
-                    ->save();
-
-					// sign the user in
-					Auth::instance()->login($values['username'], $password);
-					// redirect to the user account
-					$this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
-				}
-				catch (ORM_Validation_Exception $e)
-				{//since we checked on username and password that only leaves us with duplicate or empty email
-
-                    if(key($e->errors()) == 'email' && Arr::path($e->errors(),'email.0') == 'unique')
-                    {
-                        //getting the user this social-auth request claims to drive
-                        $user = ORM::factory('User')
-                            ->where('email','=',$values['email'])
-                            ->find();
-
-                        if($user->has('roles',ORM::factory('role',array('name'=>'admin'))) ||
-                           !Kohana::$config->load('useradmin')->believe_remote_email
-                        ){
-                            /**
-                             * Redirect back to the front page in case they
-                             * try to create another account with a separate provider
-                             */
-                            Message::add('error', __('matching.account.exists.for.provider'));
-                            $this->request->redirect('user/login');
-                        }
-
-                        //so we believe the remote auth method email and force login users even if they didn't associate with it
-                        ORM::factory('user_identity')
-                           ->values(array(
-                               'user_id'  => $user->id,
-                               'provider' => $provider_name,
-                               'identity' => $provider->user_id(),
-                           ))
-                       ->save();
-
-                        /**
-                         * @var $auth Auth_ORM
-                         */
-                        $auth = Auth::instance();
-                        $auth->force_login($user, true);
-                        $this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
-                    }
-
-					if ($provider->email() === null)
-					{
-						Message::add('error', __('no.email.retrive.support'));
-					}
-					else
-					{
-						Message::add('error', __('please.complete.data.from.other.account'));
-					}
-
-
-					// in case the data for some reason fails, the user will still see something sensible:
-					// the normal registration form.
-					$view = View::factory('user/register');
-
-					$errors = $e->errors('register');
-					// Move external errors to main array, for post helper compatibility
-					$errors = array_merge($errors, ( isset($errors['_external']) ? $errors['_external'] : array() ));
-					$view->set('errors', $errors);
-
-					// Pass on the old form values
-					$values['password'] = $values['password_confirm'] = '';
-					$view->set('defaults', $values);
-
-					if (Kohana::$config->load('useradmin')->captcha)
-					{
-						// FIXME: Is this the best place to include and use recaptcha?
-						include Kohana::find_file('vendor', 'recaptcha/recaptchalib');
-						$recaptcha_config = Kohana::$config->load('recaptcha');
-						$recaptcha_error = null;
-						$view->set('captcha_enabled', true);
-						$view->set('recaptcha_html', recaptcha_get_html($recaptcha_config['publickey'], $recaptcha_error));
-					}
-					$this->template->content = $view;
-				}
-			}
-			else
-			{
-                //user came back from a login-via-provider, but was already auth'd locally
-				Message::add('error', __('logged.in.but.account.emails.do.not.match'));
-				$this->request->redirect('user/profile');
-			}
-		}
+            $this->create_user_from_provider($provider_info);
+        }
 		else
 		{
 			Message::add('error', __('retrieving.info.from.provider.failed.register.below'));
@@ -954,4 +850,114 @@ class Useradmin_Controller_User extends Controller_App {
 		}
 
 	}
+
+    protected function create_user_from_provider($provider_info)
+    {
+        // create new account
+        if (Auth::instance()->logged_in()) {
+            //user came back from a login-via-provider, but was already auth'd locally
+            Message::add('error', __('logged.in.but.account.emails.do.not.match'));
+            $this->request->redirect('user/profile');
+        }
+
+        /** @var $user Useradmin_Model_User */
+        $user = ORM::factory('user');
+
+        // fill in values
+        // generate long random password (maximum that passes validation is 42 characters)
+        $password = $user->generate_password(42);
+        $user_info = array(
+            // get a unused username like firstname.surname or firstname.surname2 ...
+            'username' => $user->generate_username($provider_info['name']),
+            'password' => $password,
+            'password_confirm' => $password
+        );
+
+        if (Valid::email($provider_info['email'], TRUE)) {
+            $user_info['email'] = $provider_info['email'];
+        }
+        try {
+            // If the post data validates using the rules setup in the user model
+            $user->create_user($user_info, $this->user_model_fields);
+            // Add the login role to the user (add a row to the db)
+            $login_role = new Model_Role(array(
+                'name' => 'login'
+            ));
+            $user->add('roles', $login_role);
+
+            // create user identity after we have the user id
+            ORM::factory('user_identity')
+                ->values(array('user_id' => $user->id) + $provider_info)
+                ->save();
+
+            // sign the user in
+            Auth::instance()->login($user_info['username'], $password);
+            // redirect to the user account
+            $this->request->redirect(Session::instance()->get_once('returnUrl', 'user/profile'));
+
+        } catch (ORM_Validation_Exception $e) { //since we checked on username and password that only leaves us with duplicate or empty email
+
+            if (key($e->errors()) == 'email' && Arr::path($e->errors(), 'email.0') == 'unique') {
+                //getting the user this social-auth request claims to drive
+                $user = ORM::factory('User')
+                    ->where('email', '=', $user_info['email'])
+                    ->find();
+
+                if ($user->has('roles', ORM::factory('role', array('name' => 'admin'))) ||
+                    !Kohana::$config->load('useradmin')->believe_remote_email
+                ) {
+                    /**
+                     * Redirect back to the front page in case they
+                     * try to create another account with a separate provider
+                     */
+                    Message::add('error', __('matching.account.exists.for.provider'));
+                    $this->request->redirect('user/login');
+                }
+
+                //so we believe the remote auth method email and force login users even if they didn't associate with it
+                ORM::factory('user_identity')
+                    ->values(array('user_id' => $user->id) + $provider_info)
+                    ->save();
+
+                /**
+                 * @var $auth Auth_ORM
+                 */
+                $auth = Auth::instance();
+                $auth->force_login($user, true);
+                $this->request->redirect(Session::instance()->get_once('returnUrl', 'user/profile'));
+            }
+
+            if ($provider_info['email'] === null) {
+                Message::add('error', __('no.email.retrive.support'));
+            } else {
+                Message::add('error', __('please.complete.data.from.other.account'));
+            }
+
+
+            // in case the data for some reason fails, the user will still see something sensible:
+            // the normal registration form.
+            $view = View::factory('user/register');
+            Session::instance()->set('registration_provider_data', $provider_info);
+
+            $errors = $e->errors('register');
+            // Move external errors to main array, for post helper compatibility
+            $errors = array_merge($errors, (isset($errors['_external']) ? $errors['_external'] : array()));
+            $view->set('errors', $errors);
+
+            // Pass on the old form values
+            $user_info['password'] = $user_info['password_confirm'] = '';
+            $view->set('defaults', $user_info);
+
+            if (Kohana::$config->load('useradmin')->captcha) {
+                // FIXME: Is this the best place to include and use recaptcha?
+                include Kohana::find_file('vendor', 'recaptcha/recaptchalib');
+                $recaptcha_config = Kohana::$config->load('recaptcha');
+                $recaptcha_error = null;
+                $view->set('captcha_enabled', true);
+                $view->set('recaptcha_html', recaptcha_get_html($recaptcha_config['publickey'], $recaptcha_error));
+            }
+            $this->template->content = $view;
+        }
+
+    }
 }

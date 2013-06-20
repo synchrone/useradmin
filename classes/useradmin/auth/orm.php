@@ -64,16 +64,17 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 		
 		return $status;
 	}
-	
-	/**
-	 * Register a single user
-	 * Method to register new user by Useradmin Auth module, when you set the
-	 * fields, be sure they must respect the driver rules
-	 * 
-	 * @param array $fields An array witch contains the fields to be populate
-	 * @returnboolean Operation final status
-	 * @see Useradmin_Driver_iAuth::register()
-	 */
+
+    /**
+     * Register a single user
+     * Method to register new user by Useradmin Auth module, when you set the
+     * fields, be sure they must respect the driver rules
+     *
+     * @param array $fields An array witch contains the fields to be populate
+     * @throws Kohana_Exception
+     * @return Model_User Operation final status
+     * @see Useradmin_Driver_iAuth::register()
+     */
 	public function register($fields) 
 	{
 		if( ! is_object($fields) ) 
@@ -93,19 +94,13 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 				throw new Kohana_Exception('Invalid user fields.');
 			}
 		}
-		try 
-		{
-			$user->create_user($fields, $this->user_model_fields);
-			// Add the login role to the user (add a row to the db)
-			$login_role = new Model_Role(array('name' =>'login'));
-            $user->add('roles', $login_role);
-		} 
-		catch (ORM_Validation_Exception $e) 
-		{
-			throw $e;
-			return FALSE;
-		}
-		return TRUE;
+
+        $user->create_user($fields, $this->user_model_fields);
+        // Add the login role to the user (add a row to the db)
+        $login_role = new Model_Role(array('name' =>'login'));
+        $user->add('roles', $login_role);
+
+		return $user;
 	}
 	
 	/**
