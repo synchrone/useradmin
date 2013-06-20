@@ -696,7 +696,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 * prove that they want to trust that identity provider on your application.
 	 *
 	 */
-	function action_associate_return()
+	function action_associate_return($redirect_url = '/user/profile')
 	{
 		$provider_name = $this->request->param('provider');
 		if (Auth::instance()->logged_in())
@@ -715,26 +715,23 @@ class Useradmin_Controller_User extends Controller_App {
 						$user_identity->user_id = $user->id;
 						$user_identity->provider = $provider_name;
 						$user_identity->identity = $provider->user_id();
-						if ($user_identity->check())
+						if ($user_identity->validation()->check())
 						{
 							Message::add('success', __('user.account.associated.with.provider'));
 							$user_identity->save();
-							// redirect to the user account
-							$this->request->redirect('user/profile');
-							return;
 						}
 						else
 						{
 							Message::add('error', __('unable.to.associate.account.with.provider'));
-							$this->request->redirect('user/login');
-							return;
 						}
+                        $this->request->redirect($redirect_url);
+                        return;
 					}
 				}
 			}
 		}
 		Message::add('error', __('error.associating.account.with.provider'));
-		$this->request->redirect('user/login');
+		$this->request->redirect($redirect_url);
 		return;
 	}
 
