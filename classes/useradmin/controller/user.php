@@ -146,6 +146,7 @@ class Useradmin_Controller_User extends Controller_App {
 	{
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('edit.profile');
+        /** @var Model_User $user */
 		$user = Auth::instance()->get_user();
 		$id = $user->id;
 		// load the content from view
@@ -438,9 +439,12 @@ class Useradmin_Controller_User extends Controller_App {
 		$this->template->title = __('forgot.password');
 		if (isset($_POST['reset_email']))
 		{
-			$user = ORM::factory('user')->where('email', '=', $_POST['reset_email'])->find();
+            /**
+             * @var $user Model_User
+             */
+            $user = ORM::factory('user')->where('email', '=', $_POST['reset_email'])->find();
 			// admin passwords cannot be reset by email
-			if (is_numeric($user->id) && ( $user->username != 'admin' ))
+			if (is_numeric($user->id) && !$user->has('roles', ORM::factory('role', array('name' => 'admin'))))
 			{
 				// send an email with the account reset token
 				$user->reset_token = $user->generate_password(32);
@@ -595,7 +599,6 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider ()
 	{
-		$provider_name = $this->request->param('provider');
 		if (Auth::instance()->logged_in())
 		{
 			Message::add('success', __('already.logged.in'));
@@ -850,6 +853,7 @@ class Useradmin_Controller_User extends Controller_App {
 			}
 			else
 			{
+                //user came back from a login-via-provider, but was already auth'd locally
 				Message::add('error', __('logged.in.but.account.emails.do.not.match'));
 				$this->request->redirect('user/profile');
 			}
