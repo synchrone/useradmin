@@ -107,6 +107,13 @@ return array(
      * Notice: for this to work, you should change database field to allow null
      */
     'remote_auth_require_email' => true,
+
+    /**
+     * This allows users to login using auth provider in case the returned email matches with a local user's,
+     * even if that user did not associate his account with auth-provider.
+     */
+    'believe_remote_email' => false,
+
     /**
      * Toggle reCaptcha support: if set, then during registration the user is shown
      * a reCaptcha which they must answer correctly (unless they are using one of the 3rd party accounts).

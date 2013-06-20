@@ -798,12 +798,16 @@ class Useradmin_Controller_User extends Controller_App {
 						'name' => 'login'
 					));
 					$user->add('roles', $login_role);
+
 					// create user identity after we have the user id
-					$user_identity = ORM::factory('user_identity');
-					$user_identity->user_id  = $user->id;
-					$user_identity->provider = $provider_name;
-					$user_identity->identity = $provider->user_id();
-					$user_identity->save();
+					ORM::factory('user_identity')
+                        ->values(array(
+                            'user_id'  => $user->id,
+                            'provider' => $provider_name,
+                            'identity' => $provider->user_id(),
+                        ))
+                    ->save();
+
 					// sign the user in
 					Auth::instance()->login($values['username'], $password);
 					// redirect to the user account
@@ -812,13 +816,39 @@ class Useradmin_Controller_User extends Controller_App {
 				catch (ORM_Validation_Exception $e)
 				{//since we checked on username and password that only leaves us with duplicate or empty email
 
-                    if(key($e->errors()) == 'email' && current(key($e->errors())) == 'unique'){
-                        /*
-                         * Redirect back to the front page in case they
-                         * try to create another account with a separate provider
+                    if(key($e->errors()) == 'email' && Arr::path($e->errors(),'email.0') == 'unique')
+                    {
+                        //getting the user this social-auth request claims to drive
+                        $user = ORM::factory('User')
+                            ->where('email','=',$values['email'])
+                            ->find();
+
+                        if($user->has('roles',ORM::factory('role',array('name'=>'admin'))) ||
+                           !Kohana::$config->load('useradmin')->believe_remote_email
+                        ){
+                            /**
+                             * Redirect back to the front page in case they
+                             * try to create another account with a separate provider
+                             */
+                            Message::add('error', __('matching.account.exists.for.provider'));
+                            $this->request->redirect('user/login');
+                        }
+
+                        //so we believe the remote auth method email and force login users even if they didn't associate with it
+                        ORM::factory('user_identity')
+                           ->values(array(
+                               'user_id'  => $user->id,
+                               'provider' => $provider_name,
+                               'identity' => $provider->user_id(),
+                           ))
+                       ->save();
+
+                        /**
+                         * @var $auth Auth_ORM
                          */
-                        Message::add('error', __('matching.account.exists.for.provider'));
-                        $this->request->redirect('user/login');
+                        $auth = Auth::instance();
+                        $auth->force_login($user, true);
+                        $this->request->redirect(Session::instance()->get_once('returnUrl','user/profile'));
                     }
 
 					if ($provider->email() === null)
@@ -829,16 +859,21 @@ class Useradmin_Controller_User extends Controller_App {
 					{
 						Message::add('error', __('please.complete.data.from.other.account'));
 					}
+
+
 					// in case the data for some reason fails, the user will still see something sensible:
 					// the normal registration form.
 					$view = View::factory('user/register');
+
 					$errors = $e->errors('register');
 					// Move external errors to main array, for post helper compatibility
 					$errors = array_merge($errors, ( isset($errors['_external']) ? $errors['_external'] : array() ));
 					$view->set('errors', $errors);
+
 					// Pass on the old form values
 					$values['password'] = $values['password_confirm'] = '';
 					$view->set('defaults', $values);
+
 					if (Kohana::$config->load('useradmin')->captcha)
 					{
 						// FIXME: Is this the best place to include and use recaptcha?
