@@ -561,36 +561,28 @@ class Useradmin_Controller_User extends Controller_App {
 	{
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('change.password');
+        /** @var Model_User $user */
 		$user = Auth::instance()->get_user();
 		$id = $user->id;
 		// load the content from view
 		$view = View::factory('user/change_password');
 		// save the data
-		if (! empty($_POST) && is_numeric($id))
+		if (count($this->request->post()) != 0 && is_numeric($id))
 		{
 			// editing requires that the username and email do not exist (EXCEPT for this ID)
 			// If the post data validates using the rules setup in the user model
-			$param_by_ref = array(
-				'password' => $_POST['password'], 
-				'password_confirm' => $_POST['password_confirm']
-			);
-			$validate = $user->change_password($param_by_ref, FALSE);
-			if ($validate)
-			{
+			try{
+                $user->update_user($this->request->post(),array('password','password_confirm'));
 				// message: save success
 				Message::add('success', __('values.saved'));
 				// redirect and exit
 				$this->request->redirect('user/index'); //index will redir ya whereever you need
-				return;
 			}
-			else
-			{
+            catch(Exception $e)
+            {
 				// UNFORTUNATELY, it is NOT possible to get errors for display in view
 				// since they will never be returned by change_password()
 				Message::add('error', __('unable.to.change.password.?passwords.match'));
-				// Pass on the old form values
-				$_POST['password'] = $_POST['password_confirm'] = '';
-				$view->set('defaults', $_POST);
 			}
 		}
 		else
