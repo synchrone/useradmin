@@ -142,7 +142,7 @@ class Useradmin_Controller_User extends Controller_App {
 	/**
 	 * View: Profile editor
 	 */
-	public function action_profile_edit()
+	public function action_profile_edit($redirect_url = 'user/profile')
 	{
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('edit.profile');
@@ -165,7 +165,7 @@ class Useradmin_Controller_User extends Controller_App {
 				// message: save success
 				Message::add('success', __('values.saved').'.');
 				// redirect and exit
-				$this->request->redirect('user/profile');
+				$this->request->redirect($redirect_url);
 				return;
 			}
 			catch (ORM_Validation_Exception $e)
