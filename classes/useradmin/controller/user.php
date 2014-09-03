@@ -465,7 +465,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$from_name = Kohana::$config->load('useradmin')->email_address_name;
 
 				$body = __("email.password.reset.message.body", array(
-					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE),
+					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token, TRUE),
 					':reset_link' => URL::site('user/reset', TRUE), 
 					':reset_token' => $user->reset_token, 
 					':username' => $user->username
@@ -516,14 +516,13 @@ class Useradmin_Controller_User extends Controller_App {
 		}
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('reset.password');
-		if (isset($_REQUEST['reset_token']) && isset($_REQUEST['reset_email']))
+		if (isset($_REQUEST['reset_token']))
 		{
 			// make sure that the reset_token has exactly 32 characters (not doing that would allow resets with token length 0)
-			if (( strlen($_REQUEST['reset_token']) == 32 ) && ( strlen(trim($_REQUEST['reset_email'])) > 1 ))
+			if (( strlen($_REQUEST['reset_token']) == 32 ))
 			{
 				$user = ORM::factory('user')
-					->where('email', '=', $_REQUEST['reset_email'])
-					->and_where('reset_token', '=', $_REQUEST['reset_token'])
+					->where('reset_token', '=', $_REQUEST['reset_token'])
 					->find();
 
 				// The admin password cannot be reset by email
